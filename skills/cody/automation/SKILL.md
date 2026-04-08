@@ -12,6 +12,11 @@ Automation details contain structured markdown with code blocks that define:
 2. **Dependencies** - External data requirements (queries, services)
 3. **Automation Rules** - Business logic for event handling
 
+### Related Documentation
+
+- [Rule Engine](https://wiki.prooph-board.com/board_workspace/Rule-Engine.html) — Details on the rule engine used for automation rules (`cody-rules`) including `trigger`, `lookup`, `forEach`, and `log` actions
+- [JEXL Expressions](https://wiki.prooph-board.com/board_workspace/Expressions.html) — Documentation for JEXL expressions used in `cody-rules` and `cody-dependencies` code blocks
+
 ---
 
 ## Structure Template
@@ -170,6 +175,8 @@ This declares that the automation reacts to events. The specific event is determ
 ### 3. Automation Rules
 
 **Required for all automations** - defines event handling logic
+
+> Automation rules use the [Rule Engine](https://wiki.prooph-board.com/board_workspace/Rule-Engine.html). Key actions for automations include `trigger` (execute commands), `lookup` (find users), `forEach` (iterate collections), `assign` (set variables), and `log` (debug output).
 
 #### Rule Structure
 
@@ -905,6 +912,8 @@ Assuming one responsible user per group.
 ---
 
 ## Expression Syntax
+
+> Expressions use the [JEXL expression language](https://wiki.prooph-board.com/board_workspace/Expressions.html). The `$>` prefix marks a JEXL expression in Cody code blocks.
 
 ### Available Variables
 

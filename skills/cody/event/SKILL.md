@@ -13,6 +13,11 @@ Event details contain structured markdown with code blocks that define:
 3. **State Apply Rules** - How the event updates aggregate state
 4. **Configuration** - Event visibility metadata
 
+### Related Documentation
+
+- [Rule Engine](https://wiki.prooph-board.com/board_workspace/Rule-Engine.html) — Details on the rule engine used for state apply rules (`cody-apply-rules`)
+- [JEXL Expressions](https://wiki.prooph-board.com/board_workspace/Expressions.html) — Documentation for JEXL expressions used in `cody-apply-rules` and `cody-schema` code blocks
+
 ---
 
 ## Structure Template
@@ -184,6 +189,8 @@ of aggregate:
 ### 3. State Apply Rules
 
 **Required for all events** - defines how event updates aggregate state
+
+> State apply rules use the [Rule Engine](https://wiki.prooph-board.com/board_workspace/Rule-Engine.html) `assign` action to update the aggregate state. The `information` variable holds the current state and is replaced with the new value.
 
 #### Rule Structure
 
@@ -357,6 +364,8 @@ of aggregate:
 ---
 
 ## Expression Syntax
+
+> Expressions use the [JEXL expression language](https://wiki.prooph-board.com/board_workspace/Expressions.html). The `$>` prefix marks a JEXL expression in Cody code blocks.
 
 ### Available Variables
 

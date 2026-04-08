@@ -16,6 +16,11 @@ Information details contain structured markdown with code blocks that define:
 6. **Initialize** - Default value initialization (optional)
 7. **Projection** - Event-sourced projections (for read models)
 
+### Related Documentation
+
+- [Rule Engine](https://wiki.prooph-board.com/board_workspace/Rule-Engine.html) — Details on the rule engine used for query resolvers, projections, and initialization rules
+- [JEXL Expressions](https://wiki.prooph-board.com/board_workspace/Expressions.html) — Documentation for JEXL expressions used in `cody-resolve`, `cody-projection`, `cody-initialize`, `cody-schema`, and `cody-ui-schema` code blocks
+
 ---
 
 ## Structure Template
@@ -423,6 +428,8 @@ Information details contain structured markdown with code blocks that define:
 
 **Required for queryable information** - defines how to fetch data
 
+> Query resolvers use the [Rule Engine](https://wiki.prooph-board.com/board_workspace/Rule-Engine.html) to define data retrieval rules including `where` filters, `orderBy` sorting, and `findById`/`find` lookups.
+
 #### Empty Resolver (returns all)
 
 ```cody-resolve
@@ -672,6 +679,8 @@ Information details contain structured markdown with code blocks that define:
 
 **Optional** - default values for new items
 
+> Initialize rules use the [Rule Engine](https://wiki.prooph-board.com/board_workspace/Rule-Engine.html) to set default values when creating new items.
+
 ```cody-initialize
 []
 ```
@@ -698,6 +707,8 @@ Information details contain structured markdown with code blocks that define:
 ### 7. Projection (Event-Sourced Read Models)
 
 **Optional** - for building read models from events
+
+> Projections use the [Rule Engine](https://wiki.prooph-board.com/board_workspace/Rule-Engine.html) to define event handlers with `when`/`given`/`then` clauses. Each case handles one event type, with `upsert` actions writing to the read model.
 
 #### Projection with Multiple Event Handlers
 

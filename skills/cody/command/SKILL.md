@@ -15,6 +15,11 @@ Command details contain structured markdown with code blocks that define:
 5. **Command Handler** - Business logic rules and event recording
 6. **Configuration** - Command behavior metadata
 
+### Related Documentation
+
+- [Rule Engine](https://wiki.prooph-board.com/board_workspace/Rule-Engine.html) — Details on the rule engine used for command handler configuration
+- [JEXL Expressions](https://wiki.prooph-board.com/board_workspace/Expressions.html) — Documentation for JEXL expressions used in `cody-rules`, `cody-schema`, and `cody-ui-schema` code blocks
+
 ---
 
 ## Structure Template
@@ -439,6 +444,8 @@ of aggregate: Customer
 
 **Required for all commands** - defines business logic
 
+> The command handler uses the [Rule Engine](https://wiki.prooph-board.com/board_workspace/Rule-Engine.html) to define command behavior. See the wiki for full documentation of rule types, actions, and expression syntax.
+
 #### Rule Structure
 
 ```cody-rules
@@ -672,6 +679,8 @@ of aggregate: Customer
 ---
 
 ## Expression Syntax
+
+> Expressions use the [JEXL expression language](https://wiki.prooph-board.com/board_workspace/Expressions.html). The `$>` prefix marks a JEXL expression in Cody code blocks.
 
 ### Available Variables
 

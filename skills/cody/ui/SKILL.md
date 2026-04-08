@@ -11,6 +11,10 @@ UI elements in this system represent **pages/screens** in the application. Each 
 3. **Views Configuration** - Data views and their UI schemas
 4. **Actions/Commands** - Buttons and interactions available on the page
 
+### Related Documentation
+
+- [JEXL Expressions](https://wiki.prooph-board.com/board_workspace/Expressions.html) — Documentation for JEXL expressions used in `cody-views`, `cody-commands`, `cody-metadata`, `cody-sidebar`, and `cody-ui-schema` code blocks (e.g., `expr` properties, data binding, route parameters)
+
 ---
 
 ## Structure Template
@@ -386,7 +390,9 @@ UI elements in this system represent **pages/screens** in the application. Each 
 
 ## Expression Syntax
 
-Expressions use `$>` prefix and pipe operators:
+> Expressions use the [JEXL expression language](https://wiki.prooph-board.com/board_workspace/Expressions.html). The `$>` prefix marks a JEXL expression in Cody code blocks.
+
+Expressions use pipe operators:
 
 ```
 $> page|data('/App/Lead', {})|get('phone', 'default')
@@ -869,6 +875,8 @@ $> theme.spacing|call(2)
 ---
 
 ## Data Binding Patterns
+
+> See the [JEXL Expressions](https://wiki.prooph-board.com/board_workspace/Expressions.html) documentation for full details on data binding, property access, and transformation functions.
 
 ### Route Parameters
 

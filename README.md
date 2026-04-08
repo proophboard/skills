@@ -34,6 +34,34 @@ skill-package/
 └── skill.json    # Metadata (name, version, dependencies)
 ```
 
+## Contribution
+
+We welcome contributions! Have you developed custom skills for AI agents working on and with prooph board? Share them with the community.
+
+### Skill Ideas
+
+Here are some examples of skills the community could benefit from:
+
+- **Code Generation Skills** — Generate code in different languages, frameworks, or runtimes from prooph board models (e.g., TypeScript/Node.js, Python/FastAPI, Java/Spring, Go)
+- **Specialized Modeling Skills** — Domain-specific modeling guidelines, pattern libraries, or notation extensions
+- **Analysis Skills** — Perform information completeness checks on the model, find accidental complexity, detect coupling issues, or identify bad naming
+- **Legacy System Analysis Skills** — Analyze legacy codebases and document findings as chapters on prooph board
+- **Ticketing Integration Skills** — Synchronize slices with ticketing systems like Jira, GitHub Issues, Linear, etc.
+- **Validation Skills** — Validate models against best practices, naming conventions, or architectural constraints
+
+### How to Contribute
+
+1. **Develop your skill** following the [skill package structure](#skill-package-structure) above
+2. **Create a pull request** with your skill package in the appropriate `skills/` subdirectory
+3. Ensure your `SKILL.md` is well-documented with examples and your `skill.json` has accurate metadata
+4. Wait for review — we'll check quality, relevance, and adherence to conventions
+
+### Reward: Free Workspace Seat
+
+For each accepted and merged skill contribution, you'll receive **one additional permanent free seat** on your prooph board workspace.
+
+After your PR gets accepted, we'll contact you and ask for the workspace ID that should receive the additional seat.
+
 ## License
 
 MIT 

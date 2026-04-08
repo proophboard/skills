@@ -1,0 +1,10 @@
+{
+  "name": "cody-ui",
+  "version": "1.0.0",
+  "description": "Cody UI Skill - Specification for creating UI element details in prooph board. Defines page metadata, sidebar configuration, views configuration, and actions/commands for pages/screens.",
+  "category": "cody",
+  "dependencies": ["proophboard-mcp"],
+  "elementTypes": ["ui"],
+  "authors": ["prooph software GmbH"],
+  "license": "MIT"
+}

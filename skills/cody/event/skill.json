@@ -1,0 +1,10 @@
+{
+  "name": "cody-event",
+  "version": "1.0.0",
+  "description": "Cody Event Skill - Specification for creating Event element details in prooph board. Defines schema, state apply rules, and configuration metadata for business facts that became true.",
+  "category": "cody",
+  "dependencies": ["proophboard-mcp"],
+  "elementTypes": ["event"],
+  "authors": ["prooph software GmbH"],
+  "license": "MIT"
+}

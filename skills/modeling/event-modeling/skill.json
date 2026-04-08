@@ -1,0 +1,10 @@
+{
+  "name": "event-modeling",
+  "version": "1.0.0",
+  "description": "Event Modeling Skill - Guidelines for creating Event Models on prooph board. Covers event-first modeling strategy, command eligibility tests, element types, anti-patterns, and self-validation.",
+  "category": "modeling",
+  "dependencies": ["proophboard-mcp"],
+  "elementTypes": ["command", "event", "information", "ui", "automation", "hotspot"],
+  "authors": ["prooph software GmbH"],
+  "license": "MIT"
+}

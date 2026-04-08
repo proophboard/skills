@@ -1,0 +1,10 @@
+{
+  "name": "cody-automation",
+  "version": "1.0.0",
+  "description": "Cody Automation Skill - Specification for creating Automation element details in prooph board. Defines event reaction, dependencies, and automation rules for automated reactions to events.",
+  "category": "cody",
+  "dependencies": ["proophboard-mcp"],
+  "elementTypes": ["automation"],
+  "authors": ["prooph software GmbH"],
+  "license": "MIT"
+}

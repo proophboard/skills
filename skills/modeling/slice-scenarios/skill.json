@@ -1,0 +1,10 @@
+{
+  "name": "slice-scenarios",
+  "version": "1.0.0",
+  "description": "Slice Scenarios Skill - Guide for writing Given-When-Then scenarios in slice details. Covers scenario structure, element references, YAML data patterns, and best practices for documenting behavior.",
+  "category": "modeling",
+  "dependencies": ["proophboard-mcp"],
+  "elementTypes": ["command", "event", "information", "ui", "automation", "hotspot"],
+  "authors": ["prooph software GmbH"],
+  "license": "MIT"
+}

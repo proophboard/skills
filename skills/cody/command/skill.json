@@ -1,0 +1,10 @@
+{
+  "name": "cody-command",
+  "version": "1.0.0",
+  "description": "Cody Command Skill - Specification for creating Command element details in prooph board. Defines schema, UI schema, dependencies, command handler rules, and configuration metadata for business actions that change persistent system state.",
+  "category": "cody",
+  "dependencies": ["proophboard-mcp"],
+  "elementTypes": ["command"],
+  "authors": ["prooph software GmbH"],
+  "license": "MIT"
+}

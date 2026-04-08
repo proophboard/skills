@@ -1,0 +1,10 @@
+{
+  "name": "cody-information",
+  "version": "1.0.0",
+  "description": "Cody Information Skill - Specification for creating Information element details in prooph board. Defines schema, UI schema, query schema, query resolver, configuration, initialize, and projection for read models.",
+  "category": "cody",
+  "dependencies": ["proophboard-mcp"],
+  "elementTypes": ["information"],
+  "authors": ["prooph software GmbH"],
+  "license": "MIT"
+}

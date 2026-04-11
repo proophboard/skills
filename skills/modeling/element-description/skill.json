@@ -1,6 +1,6 @@
 {
   "name": "element-description",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Element Description Skill - Guide for writing effective local element descriptions in prooph board. Covers markdown formatting, YAML examples, ASCII mockups, and patterns for each element type.",
   "category": "modeling",
   "dependencies": ["proophboard-mcp"],

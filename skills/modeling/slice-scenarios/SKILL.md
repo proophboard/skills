@@ -1,3 +1,8 @@
+---
+name: slice-scenarios
+description: "Slice Scenarios Skill - Guide for writing Given-When-Then scenarios in slice details. Covers scenario structure, element references, YAML data patterns, and best practices for documenting behavior. Use this skill when tasked to add user stories or Given-When-Then (GWTs) scenarios to a chapter on prooph board."
+---
+
 # Slice Scenarios Skill - Writing Given-When-Then Scenarios for Slices
 
 This document describes how to write effective **slice scenario documentation** in prooph board, based on analysis of real-world modeling examples.

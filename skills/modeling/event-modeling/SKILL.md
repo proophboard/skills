@@ -1,4 +1,9 @@
-# Event Modeling Skill - prooph board guidelines
+---
+name: event-modeling
+description: "Event Modeling Skill - Guidelines for creating Event Models on prooph board. Covers event-first modeling strategy, command eligibility tests, element types, anti-patterns, and self-validation. Use this skill to understand the rules of Event Modeling on prooph board."
+---
+
+# Event Modeling Guidelines for AI Agents
 
 These guidelines describe how to create Event Models on a prooph board.
 
@@ -260,33 +265,65 @@ The **Information Flow lane must not be renamed**.
 
 Slices represent **steps in the process**.
 
-Each slice is either:
-
-### Write Slice
-
-Contains:
-
-Command → Event
-
-Rules:
-
-- exactly one command
-- one or more events
-
----
+Each slice is one of three types:
 
 ### Read Slice
 
 Contains:
 
-Information → UI or Automation
+Information → UI
 
 Rules:
 
+- information element in Information Flow lane
+- UI element in User Role lane
 - commands are NOT allowed
-- events normally do NOT appear here
+- events are NOT allowed
+- automation is NOT allowed
 
-Events may appear in read slices only as **copies for context**.
+A Read Slice represents data being displayed to users.
+
+---
+
+### Write Slice
+
+Contains:
+
+UI (optional) -> Command → Event
+
+Rules:
+
+- exactly one command in Information Flow lane
+- one or more events in System Context lane
+- information is NOT allowed
+- automation is NOT allowed
+
+A Write Slice represents a business action that changes system state.
+
+---
+
+### Automation Slice
+
+Contains:
+
+Information (optional) → Automation
+
+Rules:
+
+- optional information element in Information Flow lane
+- automation element in User Role lane
+- commands are NOT allowed
+- events are NOT allowed
+- UI is NOT allowed
+
+An Automation Slice represents automated decision-making or scheduled processing.
+
+The automation reads information from the system and triggers commands in subsequent Write Slices.
+
+**Important**: Events are NOT placed in automation slices directly.
+
+- If an event triggers an automation: place the event in a previous Write Slice, then the automation in the next slice
+- If an automation triggers a command that produces an event: place a Write Slice (Command → Event) AFTER the automation slice
 
 ---
 
@@ -565,8 +602,12 @@ When reviewing the model ask:
 - Does each command pass the Command Eligibility Tests?
 
 ### Slice Structure
-- Does each write slice contain exactly one command?
-- Are events correctly placed in write slices?
+- Does each write slice contain exactly one command and at least one event?
+- Does each read slice contain exactly one information and one UI element?
+- Does each automation slice contain information (optional) and one automation element?
+- Are events correctly placed in write slices only?
+- Are automation slices free of events?
+- Are read slices free of commands, events, and automation?
 
 ### Query Modeling
 - Are queries incorrectly modeled as commands?

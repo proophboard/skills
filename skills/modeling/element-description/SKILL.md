@@ -1,3 +1,8 @@
+---
+name: element-description
+description: "Element Description Skill - Guide for writing effective local element descriptions in prooph board. Covers markdown formatting, YAML examples, ASCII mockups, and patterns for each element type. Use this skill when tasked to dive into the details of a chapter or the user asks for an example data flow and/or details of the user journey."
+---
+
 # Element Description Skill - Local Documentation for Elements
 
 This document describes how to write effective **element descriptions** in prooph board, based on analysis of real-world modeling examples and the official documentation.

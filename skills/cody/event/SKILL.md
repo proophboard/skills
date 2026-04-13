@@ -22,6 +22,8 @@ Event details contain structured markdown with code blocks that define:
 
 ## Structure Template
 
+````
+````
 ```markdown
 ## Aggregate Event
 
@@ -39,7 +41,9 @@ of aggregate: [AggregateName]
 
 ## State Apply Rules
 
-```cody-apply-rules
+
+
+`````cody-apply-rules
 [
   {
     "rule": "always",
@@ -77,33 +81,49 @@ of aggregate: [AggregateName]
 
 Events are classified by their relationship to aggregates:
 
+````
+````
 ```markdown
 ## Aggregate Event
 
 of aggregate: [AggregateName]
-```
+
+
+`````
 
 **Examples:**
 
+````
+````
 ```markdown
 ## Aggregate Event
 
 of aggregate: Order
-```
 
+
+`````
+
+````
+````
 ```markdown
 ## Aggregate Event
 
 of aggregate: Customer
-```
+
+
+`````
 
 **Note:** Some events may have an empty aggregate name (for domain events that don't update state):
 
+````
+````
 ```markdown
 ## Aggregate Event
 
 of aggregate: 
-```
+
+
+`````
 
 ---
 
@@ -416,6 +436,8 @@ $> eventCreatedAt
 
 ### Example 1: Simple Event with Merge
 
+````
+````
 ```markdown
 ## Aggregate Event
 
@@ -431,7 +453,9 @@ of aggregate: Lead
 
 ## State Apply Rules
 
-```cody-apply-rules
+
+
+`````cody-apply-rules
 [
   {
     "rule": "always",
@@ -462,6 +486,8 @@ of aggregate: Lead
 
 ### Example 2: Event with Status Update
 
+````
+````
 ```markdown
 ## Aggregate Event
 
@@ -483,7 +509,9 @@ of aggregate: Lead
 
 ## State Apply Rules
 
-```cody-apply-rules
+
+
+`````cody-apply-rules
 [
   {
     "rule": "always",
@@ -519,6 +547,8 @@ of aggregate: Lead
 
 ### Example 3: Event with Nested Object Update
 
+````
+````
 ```markdown
 ## Aggregate Event
 
@@ -535,7 +565,9 @@ of aggregate: Lead
 
 ## State Apply Rules
 
-```cody-apply-rules
+
+
+`````cody-apply-rules
 [
   {
     "rule": "always",
@@ -566,6 +598,8 @@ of aggregate: Lead
 
 ### Example 4: Event with Boolean Flag
 
+````
+````
 ```markdown
 ## Aggregate Event
 
@@ -581,7 +615,9 @@ of aggregate: Contract
 
 ## State Apply Rules
 
-```cody-apply-rules
+
+
+`````cody-apply-rules
 [
   {
     "rule": "always",
@@ -613,6 +649,8 @@ of aggregate: Contract
 
 ### Example 5: Event that Replaces State
 
+````
+````
 ```markdown
 ## Aggregate Event
 
@@ -628,7 +666,9 @@ of aggregate: Lead
 
 ## State Apply Rules
 
-```cody-apply-rules
+
+
+`````cody-apply-rules
 [
   {
     "rule": "always",
@@ -654,6 +694,8 @@ of aggregate: Lead
 
 ### Example 6: Event with Status Change Only
 
+````
+````
 ```markdown
 ## Aggregate Event
 
@@ -669,7 +711,9 @@ of aggregate: Lead
 
 ## State Apply Rules
 
-```cody-apply-rules
+
+
+`````cody-apply-rules
 [
   {
     "rule": "always",
@@ -700,6 +744,8 @@ of aggregate: Lead
 
 ### Example 7: Event with Reference Type
 
+````
+````
 ```markdown
 ## Aggregate Event
 
@@ -716,7 +762,9 @@ of aggregate:
 
 ## State Apply Rules
 
-```cody-apply-rules
+
+
+`````cody-apply-rules
 [
   {
     "rule": "always",

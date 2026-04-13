@@ -27,6 +27,8 @@ Information details contain structured markdown with code blocks that define:
 
 ### For Entity (Single Item)
 
+````
+````
 ```markdown
 ## Schema
 
@@ -50,7 +52,9 @@ Information details contain structured markdown with code blocks that define:
 
 ## Query Schema
 
-```cody-query-schema
+
+
+`````cody-query-schema
 {
   "id": "string|format:uuid"
 }
@@ -99,6 +103,8 @@ Information details contain structured markdown with code blocks that define:
 
 ### For List
 
+````
+````
 ```markdown
 ## Schema
 
@@ -123,7 +129,9 @@ Information details contain structured markdown with code blocks that define:
 
 ## Query Schema
 
-```cody-query-schema
+
+
+`````cody-query-schema
 {}
 ```
 
@@ -826,6 +834,8 @@ Information details contain structured markdown with code blocks that define:
 
 ### Example 1: Single Entity (Lead)
 
+````
+````
 ```markdown
 ## Schema
 
@@ -882,7 +892,9 @@ Information details contain structured markdown with code blocks that define:
 
 ## Query Schema
 
-```cody-query-schema
+
+
+`````cody-query-schema
 {
   "leadId": "string|format:uuid"
 }
@@ -918,6 +930,8 @@ Information details contain structured markdown with code blocks that define:
 
 ### Example 2: List with Table View (My Location Leads)
 
+````
+````
 ```markdown
 ## Schema
 
@@ -982,7 +996,9 @@ Information details contain structured markdown with code blocks that define:
 
 ## Query Schema
 
-```cody-query-schema
+
+
+`````cody-query-schema
 {}
 ```
 
@@ -1046,6 +1062,8 @@ Information details contain structured markdown with code blocks that define:
 
 ### Example 3: Entity with Nested Objects (Contract)
 
+````
+````
 ```markdown
 ## Schema
 
@@ -1114,7 +1132,9 @@ Information details contain structured markdown with code blocks that define:
 
 ## Query Schema
 
-```cody-query-schema
+
+
+`````cody-query-schema
 {
   "contractId": "string|format:uuid|title:Contract Id",
   "$title": "Get Contract"
@@ -1152,37 +1172,8 @@ Information details contain structured markdown with code blocks that define:
 
 ### Example 4: Static View (Similar Parents Hint)
 
-```markdown
-## Static View
-
-## Schema
-
-```cody-schema
-{}
-```
-
-## UI Schema
-
-```cody-ui-schema
-{
-  "ui:title": "⚠️ Existing parent found!",
-  "ui:description": "Please verify if the lead is already known as a parent in ACR-Hub. At least one parent with a similar name was found."
-}
-```
-
-## Configuration
-
-```cody-metadata
-{
-  "ns": "/App",
-  "collection": false
-}
-```
-
----
-
-### Example 5: Queryable List (Not Tied to Collection)
-
+````
+````
 ```markdown
 ## Queryable List
 
@@ -1211,7 +1202,9 @@ Not tied to a collection
 
 ## Query
 
-```cody-query-schema
+
+
+`````cody-query-schema
 {
   "leadId": "string|format:uuid"
 }
@@ -1275,6 +1268,8 @@ Not tied to a collection
 
 ### Example 6: Projection Collection (Mail Outbox)
 
+````
+````
 ```markdown
 ## Todo List
 
@@ -1316,7 +1311,9 @@ Projection collection used as worker queue
 
 ## Query
 
-```cody-query-schema
+
+
+`````cody-query-schema
 {}
 ```
 

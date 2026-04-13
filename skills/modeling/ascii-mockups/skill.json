@@ -1,0 +1,11 @@
+{
+  "name": "ascii-mockups",
+  "version": "1.0.0",
+  "description": "ASCII Mockups Skill - Guide for creating ASCII mockups in UI element descriptions on prooph board. Covers visual state representation, layout references, and documenting UI variations using text-based wireframes.",
+  "category": "modeling",
+  "dependencies": ["proophboard-mcp"],
+  "elementTypes": ["ui"],
+  "tags": ["modeling", "documentation", "ui", "wireframes", "best-practices"],
+  "authors": ["prooph software GmbH"],
+  "license": "MIT"
+}

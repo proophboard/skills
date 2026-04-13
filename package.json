@@ -1,0 +1,23 @@
+{
+  "name": "prooph-board-skills",
+  "version": "1.0.0",
+  "description": "prooph board AI Agent Skills - Static site generator for the skills catalog website",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "serve": "npx http-server ./dist -p 3000 -o",
+    "dev": "npm run build && npm run serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/proophboard/skills.git"
+  },
+  "keywords": ["prooph-board", "skills", "event-modeling", "ai-agent"],
+  "author": "prooph software GmbH",
+  "license": "MIT",
+  "dependencies": {
+    "marked": "^11.1.1",
+    "fs-extra": "^11.2.0",
+    "glob": "^10.3.10",
+    "archiver": "^6.0.1"
+  }
+}

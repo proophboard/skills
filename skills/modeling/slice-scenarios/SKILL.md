@@ -23,6 +23,7 @@ Scenarios are written in the **slice details** and are visible to all users incl
 
 ### Basic Scenario Structure
 
+````
 ```markdown
 ### Scenario: [Scenario Title]
 
@@ -54,7 +55,8 @@ to [benefit].
 ```
 
 :::
-```
+
+````
 
 ---
 
@@ -64,6 +66,7 @@ Use the `:::element` directive to reference elements in the slice:
 
 ### Syntax
 
+````
 ```markdown
 :::element [elementType]
 [Element Name]
@@ -73,7 +76,8 @@ Use the `:::element` directive to reference elements in the slice:
 ```
 
 :::
-```
+
+````
 
 ### Supported Element Types
 
@@ -92,6 +96,7 @@ Use the `:::element` directive to reference elements in the slice:
 
 ### Example 1: Happy Path Scenario (Clock In)
 
+````
 ```markdown
 ### Scenario: Start Work Day Time Tracking
 
@@ -129,7 +134,8 @@ startTime: 9am
 ```
 
 :::
-```
+
+````
 
 **Why it works:**
 - Clear user story format
@@ -141,6 +147,7 @@ startTime: 9am
 
 ### Example 2: Error/Edge Case Scenario
 
+````
 ```markdown
 ### Scenario: Time Tracking already started
 
@@ -184,7 +191,8 @@ location: loc-abc
 ```
 
 :::
-```
+
+````
 
 **Why it works:**
 - Documents business rule (no duplicate sessions)
@@ -195,6 +203,7 @@ location: loc-abc
 
 ### Example 3: Access Control Scenario
 
+````
 ```markdown
 ### Scenario: Cannot view other time tracking
 
@@ -227,7 +236,8 @@ reason: You don't have permission to view this time tracking.
 ```
 
 :::
-```
+
+````
 
 **Why it works:**
 - Documents security/authorization rule
@@ -238,6 +248,7 @@ reason: You don't have permission to view this time tracking.
 
 ### Example 4: Multiple Given Events
 
+````
 ```markdown
 ### Scenario: Clock In After Break
 
@@ -279,7 +290,8 @@ breaks:
 :::element command
 Clock In After Break
 
-```
+
+````
 trackingId: track1
 ```
 
@@ -313,6 +325,7 @@ breaks:
 
 ### Example 5: Idempotent Operation Scenario
 
+````
 ```markdown
 ### Scenario: Already clocked out for break
 
@@ -350,7 +363,8 @@ breaks:
 :::element command
 Clock Out For Break
 
-```
+
+````
 trackingId: track1
 ```
 
@@ -371,6 +385,7 @@ silently ignore clock out for break
 
 ### Example 6: Failed Operation Scenario
 
+````
 ```markdown
 ### Scenario: No active time tracking session
 
@@ -405,7 +420,8 @@ endTime: 6pm
 :::element command
 Clock Out For Break
 
-```
+
+````
 trackingId: track1
 ```
 
@@ -432,6 +448,7 @@ reason: no active time tracking session found
 
 ### Example 7: Complex State Scenario
 
+````
 ```markdown
 ### Scenario: View active Time Tracking
 
@@ -485,7 +502,8 @@ breaks:
 ```
 
 :::
-```
+
+````
 
 **Why it works:**
 - Shows accumulated state from multiple events
@@ -560,10 +578,12 @@ Use when: Documenting error details
 
 ### Pattern 6: Inline Variable Declaration
 
+````
 ```markdown
 `Employee: Anna`
 `Date: 2026-03-05`
-```
+
+````
 
 Use when: Setting context variables for scenario
 
@@ -571,6 +591,7 @@ Use when: Setting context variables for scenario
 
 ### Pattern 7: ASCII Mock: Add visual context in Given-When-Then scenarios if illustrating the user journey adds value.
 
+````
 ```markdown
 #### Then
 
@@ -592,7 +613,8 @@ Time Tracking Dashboard
 ```
 
 :::
-```
+
+````
 
 Use when: Illustrating how the UI state changes as part of the scenario
 
@@ -602,6 +624,7 @@ Use when: Illustrating how the UI state changes as part of the scenario
 
 Use markdown tables to illustrate how list views or database tables change through a scenario:
 
+````
 ```markdown
 #### Given
 
@@ -627,7 +650,8 @@ taskId: T-001
 |--------|----------|------------|------------|
 | T-001  | Anna     | completed  | 2026-03-10 |
 | T-002  | Bob      | open       | 2026-03-12 |
-```
+
+````
 
 Use when: Documenting how a collection or table changes through a scenario
 
@@ -639,6 +663,7 @@ Use when: Documenting how a collection or table changes through a scenario
 
 The normal, expected flow:
 
+````
 ```markdown
 ### Scenario: Start Work Day Time Tracking
 
@@ -653,7 +678,8 @@ A new work day: `2026-03-05`
 
 #### Then
 [Success Event]
-```
+
+````
 
 ---
 
@@ -661,6 +687,7 @@ A new work day: `2026-03-05`
 
 Enforcing domain constraints:
 
+````
 ```markdown
 ### Scenario: Time Tracking already started
 
@@ -674,7 +701,8 @@ As an employee, I cannot have more than one active time tracking sessions.
 
 #### Then
 [Hotspot - already running]
-```
+
+````
 
 ---
 
@@ -682,6 +710,7 @@ As an employee, I cannot have more than one active time tracking sessions.
 
 Permission checks:
 
+````
 ```markdown
 ### Scenario: Cannot view other time tracking
 
@@ -693,7 +722,8 @@ As an employee, I'm not allowed to view other's time tracking
 
 #### Then
 [Hotspot - Access Denied]
-```
+
+````
 
 ---
 
@@ -701,6 +731,7 @@ As an employee, I'm not allowed to view other's time tracking
 
 Invalid operations:
 
+````
 ```markdown
 ### Scenario: No active time tracking session
 
@@ -712,7 +743,8 @@ Invalid operations:
 
 #### Then
 [Hotspot - Failed with reason]
-```
+
+````
 
 ---
 
@@ -720,6 +752,7 @@ Invalid operations:
 
 Safe retry behavior:
 
+````
 ```markdown
 ### Scenario: Already clocked out for break
 
@@ -731,7 +764,8 @@ Safe retry behavior:
 
 #### Then
 silently ignore clock out for break
-```
+
+````
 
 ---
 
@@ -739,6 +773,7 @@ silently ignore clock out for break
 
 Read model behavior:
 
+````
 ```markdown
 ### Scenario: View active Time Tracking
 
@@ -749,7 +784,8 @@ As an employee, I want to view my active time tracking session.
 
 #### Then
 [Information element with projected state]
-```
+
+````
 
 ---
 
@@ -757,6 +793,7 @@ As an employee, I want to view my active time tracking session.
 
 ### 1. Use User Story Format
 
+````
 ```markdown
 ✅ Good:
 As an employee, I want to clock in at the beginning of the work day
@@ -764,7 +801,8 @@ to start a new time tracking session.
 
 ❌ Avoid:
 User clicks clock in button to start tracking.
-```
+
+````
 
 ---
 
@@ -772,6 +810,7 @@ User clicks clock in button to start tracking.
 
 Each scenario should test ONE behavior:
 
+````
 ```markdown
 ✅ Good:
 ### Scenario: Clock Out For Break
@@ -780,12 +819,14 @@ Each scenario should test ONE behavior:
 
 ❌ Avoid:
 ### Scenario: Clock Out For Break with all edge cases and errors
-```
+
+````
 
 ---
 
 ### 3. Use Concrete Example Data
 
+````
 ```markdown
 ✅ Good:
 ```yaml
@@ -799,12 +840,14 @@ trackingId: track1
 employeeId: string|format:uuid
 locationId: string|format:uuid
 ```
-```
+
+````
 
 ---
 
 ### 4. Show State Transitions Clearly
 
+````
 ```markdown
 ✅ Good:
 #### Given
@@ -818,12 +861,14 @@ locationId: string|format:uuid
 
 ❌ Avoid:
 Mixing given/when/then or skipping sections
-```
+
+````
 
 ---
 
 ### 5. Use Hotspots for Errors
 
+````
 ```markdown
 ✅ Good:
 #### Then
@@ -841,7 +886,8 @@ reason: You don't have permission
 #### Then
 
 Event: Access Denied (but it's not really an event)
-```
+
+````
 
 ---
 
@@ -849,6 +895,7 @@ Event: Access Denied (but it's not really an event)
 
 For each command, consider:
 
+````
 ```markdown
 ✅ Complete:
 - Scenario: Successful operation
@@ -856,12 +903,14 @@ For each command, consider:
 - Scenario: Already done (idempotent)
 - Scenario: Permission denied
 - Scenario: Missing data
-```
+
+````
 
 ---
 
 ### 7. Use Comments for Unchanged Data
 
+````
 ```markdown
 ✅ Good:
 ```yaml
@@ -873,7 +922,8 @@ breaks:
 
 ❌ Avoid:
 Repeating all fields when only some changed
-```
+
+````
 
 ---
 
@@ -881,6 +931,7 @@ Repeating all fields when only some changed
 
 When illustrating how UI state changes or how lists/tables are affected by a scenario, consider adding visual aids — but **always ask the user first**:
 
+````
 ```markdown
 ✅ Good (ASCII mockup for UI state change, if user wants it):
 #### Then
@@ -910,7 +961,8 @@ Time Tracking Dashboard
 
 ❌ Avoid:
 Adding ASCII mockups without asking — user may prefer screenshots or wireframes
-```
+
+````
 
 ---
 
@@ -934,6 +986,7 @@ Adding ASCII mockups without asking — user may prefer screenshots or wireframe
 
 ### ❌ Mistake 1: Missing User Story
 
+````
 ```markdown
 ❌ Bad:
 ### Scenario: Clock In
@@ -949,12 +1002,14 @@ to start a new time tracking session.
 
 #### Given
 ...
-```
+
+````
 
 ---
 
 ### ❌ Mistake 2: Using Technical Schema
 
+````
 ```markdown
 ❌ Bad:
 ```yaml
@@ -969,12 +1024,14 @@ employee: Anna
 location: loc-abc
 day: 2026-03-05
 ```
-```
+
+````
 
 ---
 
 ### ❌ Mistake 3: Incomplete Element Reference
 
+````
 ```markdown
 ❌ Bad:
 Clock In command with employee data
@@ -989,12 +1046,14 @@ location: loc-abc
 ```
 
 :::
-```
+
+````
 
 ---
 
 ### ❌ Mistake 4: Mixing Multiple Behaviors
 
+````
 ```markdown
 ❌ Bad:
 ### Scenario: Clock In and Clock Out and Handle Errors
@@ -1003,12 +1062,14 @@ location: loc-abc
 ### Scenario: Start Work Day Time Tracking
 ### Scenario: Clock Out For Break
 ### Scenario: Time Tracking already started
-```
+
+````
 
 ---
 
 ### ❌ Mistake 5: No Error Scenarios
 
+````
 ```markdown
 ❌ Bad:
 Only happy path documented
@@ -1019,7 +1080,8 @@ Only happy path documented
 - Invalid state
 - Permission denied
 - Missing data
-```
+
+````
 
 ---
 
@@ -1027,6 +1089,7 @@ Only happy path documented
 
 Multiple scenarios in one slice:
 
+````
 ```markdown
 ### Scenario: Clock Out For Break
 
@@ -1065,7 +1128,8 @@ to pause my time tracking.
 
 #### Then
 ...
-```
+
+````
 
 ---
 

@@ -5,6 +5,7 @@
   "category": "cody",
   "dependencies": ["proophboard-mcp"],
   "elementTypes": ["ui"],
+  "tags": ["ui", "cody", "event-sourcing", "low-code"],
   "authors": ["prooph software GmbH"],
   "license": "MIT"
 }

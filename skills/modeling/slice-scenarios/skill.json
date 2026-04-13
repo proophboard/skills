@@ -5,6 +5,7 @@
   "category": "modeling",
   "dependencies": ["proophboard-mcp"],
   "elementTypes": ["command", "event", "information", "ui", "automation", "hotspot"],
+  "tags": ["modeling", "scenarios", "given-when-then", "best-practices"],
   "authors": ["prooph software GmbH"],
   "license": "MIT"
 }

@@ -2,6 +2,8 @@
 
 AI agent skills for [prooph board](https://flow.prooph-board.com) - enabling AI agents to support users in Event Modeling.
 
+Browse the skills catalog at [proophboard.github.io/skills](https://proophboard.github.io/skills).
+
 ## Overview
 
 This repository contains skill packages that can be installed to AI agents (Cursor, Claude Code, Aider, etc.) that connect to the prooph board MCP server. 

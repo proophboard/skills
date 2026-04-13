@@ -32,7 +32,7 @@ locationId: string|format:uuid
 startTime: string|format:time
 ```
 
-Use schema/type definitions in **element details** (cody-schema), not in descriptions.
+Use schema/type definitions in **element details** (f.e. cody-schema), not in descriptions.
 
 ---
 
@@ -94,7 +94,7 @@ breaks:
     endTime: now()|time()
 ```
 
-The `# ...` indicates that other data from the aggregate state remains unchanged. Use `now()|time()` to show dynamic values computed at runtime.
+The `# ...` indicates that other data from the state remains unchanged. Use `now()|time()` to show dynamic values computed at runtime.
 
 ---
 
@@ -104,7 +104,7 @@ The `# ...` indicates that other data from the aggregate state remains unchanged
 trackingId: track1
 ```
 
-**Use when:** The event only carries an aggregate reference and the fact itself is clear from the event name.
+**Use when:** The event only carries an entity reference and the fact itself is clear from the event name.
 
 ---
 

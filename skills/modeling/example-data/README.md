@@ -34,16 +34,7 @@ startTime: 9am
 
 ### Examples
 
-<!-- Add screenshots here -->
-
-<!-- Example 1: Command example data -->
-<!-- ![Command example](_assets/example-command.png) -->
-
-<!-- Example 2: Event state change -->
-<!-- ![Event state change](_assets/example-event.png) -->
-
-<!-- Example 3: Information snapshot -->
-<!-- ![Information snapshot](_assets/example-information.png) -->
+![Work Time Recording Example](_assets/example-data.png)
 
 ## Best Practices
 

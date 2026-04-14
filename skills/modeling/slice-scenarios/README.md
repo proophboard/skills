@@ -12,5 +12,4 @@
 
 ## Assets
 
-<!-- Reference assets with relative paths, e.g.: -->
-<!-- ![Example](_assets/example.png) -->
+![Example](_assets/gwts.png)

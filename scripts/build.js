@@ -97,18 +97,20 @@ function renderMarkdown(content, assetsBaseUrl = '') {
   }
   const renderer = new marked.Renderer();
   
-  // Override image renderer to handle relative paths
+  // Override image renderer to handle relative paths and wrap in magnifier
   renderer.image = (href, title, text) => {
     // If href is relative and we have an assets base URL, prepend it
     if (assetsBaseUrl && href && !href.startsWith('http://') && !href.startsWith('https://')) {
       href = path.posix.join(assetsBaseUrl, href);
     }
     
-    let out = `<img src="${href}" alt="${text}"`;
+    let out = `<span class="img-wrapper"><img src="${href}" alt="${text}"`;
     if (title) {
       out += ` title="${title}"`;
     }
     out += `>`;
+    out += `<span class="magnify-icon"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M11.742 10.344a6.5 6.5 0 10-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 001.415-1.414l-3.85-3.85a1.007 1.007 0 00-.115-.1zM12 6.5a5.5 5.5 0 11-11 0 5.5 5.5 0 0111 0z"/></svg></span>`;
+    out += `</span>`;
     return out;
   };
   
@@ -215,6 +217,9 @@ function generateHTML(title, content, extraHead = '', bodyClass = '') {
       <p>&copy; ${new Date().getFullYear()} prooph software GmbH. Licensed under MIT.</p>
     </div>
   </footer>
+  <div class="image-overlay" id="image-overlay">
+    <img src="" alt="" id="overlay-image">
+  </div>
   <script>
     (function() {
       var toggle = document.getElementById('theme-toggle');
@@ -256,6 +261,32 @@ function generateHTML(title, content, extraHead = '', bodyClass = '') {
       btn.classList.add('active');
       document.getElementById('tab-' + tabName).classList.add('active');
     }
+
+    (function() {
+      var overlay = document.getElementById('image-overlay');
+      var overlayImg = document.getElementById('overlay-image');
+      if (!overlay || !overlayImg) return;
+
+      document.addEventListener('click', function(e) {
+        var img = e.target.closest('.img-wrapper');
+        if (img) {
+          var src = img.querySelector('img').src;
+          overlayImg.src = src;
+          overlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        } else if (e.target === overlay || e.target === overlayImg) {
+          overlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          overlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+    })();
   </script>
 </body>
 </html>`;
@@ -353,7 +384,7 @@ function generateSkillPage(skill, zipUrl = null) {
     .join('');
   
   // Determine assets base URL for this skill
-  const assetsBaseUrl = skill.hasAssets ? `/assets/${skill.relativePath}/_assets` : '';
+  const assetsBaseUrl = skill.hasAssets ? `/assets/${skill.relativePath}` : '';
   
   // Render README content
   const renderedReadme = skill.readmeExists
@@ -464,8 +495,8 @@ function generateTagPage(tag, skills) {
 function copyAssets(skills) {
   skills.forEach(skill => {
     if (skill.hasAssets && skill.assetsDir) {
-      const destDir = path.join(DIST_DIR, 'assets', skill.relativePath, '_assets');
-      fs.copySync(skill.assetsDir, destDir);
+      const destDir = path.join(DIST_DIR, 'assets', skill.relativePath);
+      fs.copySync(skill.assetsDir, path.join(destDir, '_assets'));
     }
   });
 }

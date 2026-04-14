@@ -758,6 +758,72 @@ p {
   margin: var(--spacing-md) 0;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  cursor: zoom-in;
+  transition: opacity var(--transition);
+}
+
+.markdown-body img:hover {
+  opacity: 0.92;
+}
+
+/* Image overlay */
+.image-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.85);
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
+
+.image-overlay.active {
+  display: flex;
+}
+
+.image-overlay img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  margin: 0;
+}
+
+/* Magnifying glass icon on hover */
+.markdown-body img {
+  position: relative;
+}
+
+.markdown-body .img-wrapper {
+  display: inline-block;
+  position: relative;
+  cursor: zoom-in;
+}
+
+.markdown-body .img-wrapper .magnify-icon {
+  display: none;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  pointer-events: none;
+}
+
+.markdown-body .img-wrapper:hover .magnify-icon {
+  display: flex;
+}
+
+.markdown-body .img-wrapper .magnify-icon svg {
+  width: 18px;
+  height: 18px;
 }
 
 .markdown-body video {

@@ -1,6 +1,6 @@
 ---
 name: event-modeling
-description: "Event Modeling Skill - Guidelines for creating Event Models on prooph board. Covers event-first modeling strategy, command eligibility tests, element types, anti-patterns, and self-validation. Use this skill to understand the rules of Event Modeling on prooph board."
+description: "Event Modeling Skill - Core guidelines for creating Event Models on prooph board. Covers event-first modeling strategy, command eligibility tests, element types, lane and slice structure, anti-patterns, and self-validation. Use this skill to understand the rules of Event Modeling on prooph board."
 ---
 
 # Event Modeling Guidelines for AI Agents
@@ -145,7 +145,7 @@ Example:
 
 Incorrect:
 
-Command: Load Orders  
+Command: Load Orders
 Event: Orders Loaded
 
 Correct:
@@ -209,12 +209,12 @@ Commands must be expressed in domain language.
 
 Good:
 
-Register User  
+Register User
 Place Order
 
 Bad:
 
-Execute Query  
+Execute Query
 Post Request
 
 ---
@@ -223,13 +223,13 @@ Post Request
 
 Each step follows this structure:
 
-User or automation decides something  
-→ sends a **Command**  
-→ system records an **Event**  
+User or automation decides something
+→ sends a **Command**
+→ system records an **Event**
 → new **Information** becomes available (next read slice)
 
-Commands express **intent**.  
-Events record **facts**.  
+Commands express **intent**.
+Events record **facts**.
 Information represents **system state that can be read**. (next read slice)
 
 ---
@@ -349,14 +349,14 @@ Naming:
 
 Examples:
 
-Register User  
-Place Order  
+Register User
+Place Order
 Cancel Subscription
 
 Invalid:
 
-Load Orders  
-Fetch Data  
+Load Orders
+Fetch Data
 Open Dialog
 
 ---
@@ -375,14 +375,14 @@ Events must:
 
 Examples:
 
-User Registered  
-Order Placed  
+User Registered
+Order Placed
 Payment Authorized
 
 Invalid:
 
-Sidebar Opened  
-Request Completed  
+Sidebar Opened
+Request Completed
 API Called
 
 ---
@@ -395,8 +395,8 @@ Represents **data read from the system**.
 
 Examples:
 
-User Profile  
-Order Summary  
+User Profile
+Order Summary
 Invoice List
 
 Queries produce **information**, not events.
@@ -411,8 +411,8 @@ Represents **screens or views**.
 
 Examples:
 
-Dashboard  
-Order Overview Page  
+Dashboard
+Order Overview Page
 User Profile Page
 
 UI elements represent screens, not interactions.
@@ -429,7 +429,7 @@ Represents automated actors.
 
 Examples:
 
-Billing Scheduler  
+Billing Scheduler
 Email Notification Service
 
 ---
@@ -455,8 +455,8 @@ Hot Spots should contain questions and explanations.
 
 Incorrect:
 
-UI: Top Menu  
-Command: Open Sidebar  
+UI: Top Menu
+Command: Open Sidebar
 Event: Sidebar Opened
 
 Reason: only UI state changes.
@@ -467,7 +467,7 @@ Reason: only UI state changes.
 
 Incorrect:
 
-Command: Load Orders  
+Command: Load Orders
 Event: Orders Loaded
 
 Reason: reading data is a query.
@@ -478,7 +478,7 @@ Reason: reading data is a query.
 
 Incorrect:
 
-Event: API Called  
+Event: API Called
 Event: Response Received
 
 Events must represent **business facts**.
@@ -502,12 +502,12 @@ If the event is unclear, do not model the step yet.
 
 For each step:
 
-Identify event  
-↓  
-Identify command  
-↓  
-Identify information  
-↓  
+Identify event
+↓
+Identify command
+↓
+Identify information
+↓
 Identify UI/automation
 
 If you cannot clearly identify the event, pause modeling.
@@ -556,24 +556,13 @@ If any answer is NO, do not create the command.
 
 ---
 
-# Given-When-Then Scenarios
+# Element Descriptions
 
-Slices can contain behavior scenarios.
+Elements can have local descriptions to document context-specific information. Use these dedicated skills for detailed patterns:
 
-Template:
-
-## Scenario: {Title}
-
-Given  
-{Information}
-
-When  
-{Command}
-
-Then  
-{Event}
-
-{Updated Information}
+- **example-data** — Adding concrete YAML example data to Command, Event, and Information elements
+- **ascii-mockups** — Creating ASCII mockups for UI element descriptions
+- **slice-scenarios** — Writing Given-When-Then scenarios in slice details
 
 ---
 

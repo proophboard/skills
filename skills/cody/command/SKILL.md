@@ -25,18 +25,16 @@ Command details contain structured markdown with code blocks that define:
 ## Structure Template
 
 ````
-````
 ```markdown
 ## Aggregate Command
 
 of aggregate: [AggregateName]
 
 
-`````
+````
 
 **Examples:**
 
-````
 ````
 ```markdown
 ## Aggregate Command
@@ -44,17 +42,12 @@ of aggregate: [AggregateName]
 of aggregate: Order
 
 
-`````
-
-````
 ````
 ```markdown
 ## Aggregate Command
 
 of aggregate: Customer
-
-
-`````
+````
 
 ---
 

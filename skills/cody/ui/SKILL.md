@@ -20,7 +20,6 @@ UI elements in this system represent **pages/screens** in the application. Each 
 ## Structure Template
 
 ````
-````
 ```markdown
 ## [Page Type]
 
@@ -37,9 +36,7 @@ UI elements in this system represent **pages/screens** in the application. Each 
 
 ## Sidebar (Top-Level Pages Only)
 
-
-
-`````cody-sidebar
+```cody-sidebar
 {
   "label": "Menu Label",
   "icon": "icon-name",
@@ -62,6 +59,7 @@ UI elements in this system represent **pages/screens** in the application. Each 
   }
 ]
 ```
+````
 
 ## Actions
 
@@ -419,7 +417,6 @@ $> theme.spacing|call(2)
 - Appears in main navigation
 
 ````
-````
 ```markdown
 ## Top-Level Page
 
@@ -430,18 +427,15 @@ $> theme.spacing|call(2)
   "breadcrumb": "Leads"
 }
 ```
-
 ## Sidebar
 
-
-
-`````cody-sidebar
+```cody-sidebar
 {
   "label": "Leads",
   "icon": "account-group-outline"
 }
 ```
-```
+````
 
 ### Sub-Level Page
 
@@ -449,7 +443,6 @@ $> theme.spacing|call(2)
 - Nested route (e.g., `/leads/:leadId`)
 - No sidebar configuration
 
-````
 ````
 ```markdown
 ## Sub-Level Page
@@ -461,9 +454,7 @@ $> theme.spacing|call(2)
   "breadcrumb": "Lead Details"
 }
 ```
-
-
-`````
+````
 
 ### Dialog Page
 
@@ -471,7 +462,6 @@ $> theme.spacing|call(2)
 - Has `type: "dialog"` and `mainPage` reference
 - Returns to main page after action
 
-````
 ````
 ```markdown
 ## Sub-Level Page
@@ -485,9 +475,7 @@ $> theme.spacing|call(2)
   "mainPage": "LeadDetails"
 }
 ```
-
-
-`````
+````
 
 ---
 
@@ -495,7 +483,6 @@ $> theme.spacing|call(2)
 
 ### Example 1: Top-Level List Page
 
-````
 ````
 ```markdown
 ## Top-Level Page
@@ -510,9 +497,7 @@ $> theme.spacing|call(2)
 
 ## Sidebar
 
-
-
-`````cody-sidebar
+```cody-sidebar
 {
   "label": "Leads",
   "icon": "account-group-outline",
@@ -527,6 +512,7 @@ $> theme.spacing|call(2)
   "MyLocationLeads"
 ]
 ```
+````
 
 ## Actions
 
@@ -549,11 +535,9 @@ $> theme.spacing|call(2)
   }
 ]
 ```
-```
 
 ### Example 2: Detail Page with List Actions
 
-````
 ````
 ```markdown
 ## Sub-Level Page
@@ -568,9 +552,7 @@ $> theme.spacing|call(2)
 
 ## Views
 
-
-
-`````cody-views
+```cody-views
 [
   {
     "view": "SimilarParentsForLead",
@@ -683,11 +665,10 @@ $> theme.spacing|call(2)
   }
 ]
 ```
-```
+````
 
 ### Example 3: Form Page with Redirect
 
-````
 ````
 ```markdown
 ## Sub-Level Page
@@ -702,9 +683,7 @@ $> theme.spacing|call(2)
 
 ## Views
 
-
-
-`````cody-views
+```cody-views
 [
   {
     "type": "form",
@@ -754,11 +733,10 @@ $> theme.spacing|call(2)
   }
 ]
 ```
-```
+````
 
 ### Example 4: Dialog Page
 
-````
 ````
 ```markdown
 ## Sub-Level Page
@@ -775,9 +753,7 @@ $> theme.spacing|call(2)
 
 ## Views
 
-
-
-`````cody-views
+```cody-views
 [
   {
     "view": "Lead",
@@ -828,7 +804,7 @@ $> theme.spacing|call(2)
   }
 ]
 ```
-```
+````
 
 ---
 

@@ -28,7 +28,6 @@ Information details contain structured markdown with code blocks that define:
 ### For Entity (Single Item)
 
 ````
-````
 ```markdown
 ## Schema
 
@@ -98,12 +97,12 @@ Information details contain structured markdown with code blocks that define:
 ```cody-initialize
 []
 ```
+````
 
 ---
 
 ### For List
 
-````
 ````
 ```markdown
 ## Schema
@@ -129,9 +128,7 @@ Information details contain structured markdown with code blocks that define:
 
 ## Query Schema
 
-
-
-`````cody-query-schema
+```cody-query-schema
 {}
 ```
 
@@ -160,6 +157,7 @@ Information details contain structured markdown with code blocks that define:
   "identifier": "id"
 }
 ```
+````
 
 ---
 
@@ -835,7 +833,6 @@ Information details contain structured markdown with code blocks that define:
 ### Example 1: Single Entity (Lead)
 
 ````
-````
 ```markdown
 ## Schema
 
@@ -892,9 +889,7 @@ Information details contain structured markdown with code blocks that define:
 
 ## Query Schema
 
-
-
-`````cody-query-schema
+```cody-query-schema
 {
   "leadId": "string|format:uuid"
 }
@@ -925,12 +920,12 @@ Information details contain structured markdown with code blocks that define:
   "entity": true
 }
 ```
+````
 
 ---
 
 ### Example 2: List with Table View (My Location Leads)
 
-````
 ````
 ```markdown
 ## Schema
@@ -996,9 +991,7 @@ Information details contain structured markdown with code blocks that define:
 
 ## Query Schema
 
-
-
-`````cody-query-schema
+```cody-query-schema
 {}
 ```
 
@@ -1057,12 +1050,11 @@ Information details contain structured markdown with code blocks that define:
   "identifier": "leadId"
 }
 ```
-
+````
 ---
 
 ### Example 3: Entity with Nested Objects (Contract)
 
-````
 ````
 ```markdown
 ## Schema
@@ -1132,9 +1124,7 @@ Information details contain structured markdown with code blocks that define:
 
 ## Query Schema
 
-
-
-`````cody-query-schema
+```cody-query-schema
 {
   "contractId": "string|format:uuid|title:Contract Id",
   "$title": "Get Contract"
@@ -1167,12 +1157,12 @@ Information details contain structured markdown with code blocks that define:
 ```cody-initialize
 []
 ```
+````
 
 ---
 
 ### Example 4: Static View (Similar Parents Hint)
 
-````
 ````
 ```markdown
 ## Queryable List
@@ -1202,9 +1192,7 @@ Not tied to a collection
 
 ## Query
 
-
-
-`````cody-query-schema
+```cody-query-schema
 {
   "leadId": "string|format:uuid"
 }
@@ -1263,12 +1251,12 @@ Not tied to a collection
   "identifier": "parentId"
 }
 ```
+````
 
 ---
 
 ### Example 6: Projection Collection (Mail Outbox)
 
-````
 ````
 ```markdown
 ## Todo List
@@ -1311,9 +1299,7 @@ Projection collection used as worker queue
 
 ## Query
 
-
-
-`````cody-query-schema
+```cody-query-schema
 {}
 ```
 
@@ -1421,7 +1407,7 @@ Projection collection used as worker queue
   "identifier": "mailId"
 }
 ```
-
+````
 ---
 
 ## Filter Operators

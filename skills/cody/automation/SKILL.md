@@ -24,12 +24,11 @@ Automation details contain structured markdown with code blocks that define:
 ### Simple Automation
 
 ````
-````
 ```markdown
 ## Event Reaction
 
 
-`````
+````
 
 This declares that the automation reacts to events. The specific event is determined by the event this automation element is placed after in the chapter flow.
 
@@ -327,7 +326,6 @@ Triggers a command with mapped data:
 ### Example 1: Simple Command Trigger
 
 ````
-````
 ```markdown
 ## Event Reaction
 
@@ -358,7 +356,7 @@ Triggers a command with mapped data:
     }
   }
 ]
-```
+````
 
 ---
 
@@ -467,7 +465,7 @@ Triggers a command with mapped data:
 **Access Event Data:**
 
 
-`````
+```
 $> event.itemId
 $> event.title
 $> event.groupId

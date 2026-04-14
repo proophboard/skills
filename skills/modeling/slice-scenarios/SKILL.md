@@ -291,7 +291,7 @@ breaks:
 Clock In After Break
 
 
-````
+```
 trackingId: track1
 ```
 
@@ -313,7 +313,7 @@ breaks:
 ```
 
 :::
-```
+````
 
 **Why it works:**
 - Shows accumulated state from multiple prior events
@@ -364,7 +364,7 @@ breaks:
 Clock Out For Break
 
 
-````
+```
 trackingId: track1
 ```
 
@@ -374,7 +374,7 @@ trackingId: track1
 #### Then
 
 silently ignore clock out for break
-```
+````
 
 **Why it works:**
 - Documents idempotent behavior
@@ -421,7 +421,7 @@ endTime: 6pm
 Clock Out For Break
 
 
-````
+```
 trackingId: track1
 ```
 
@@ -437,7 +437,7 @@ reason: no active time tracking session found
 ```
 
 :::
-```
+````
 
 **Why it works:**
 - Shows invalid state transition

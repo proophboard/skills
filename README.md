@@ -40,6 +40,8 @@ skill-package/
 
 We welcome contributions! Have you developed custom skills for AI agents working on and with prooph board? Share them with the community.
 
+For detailed contribution guidelines — including how to structure a skill, add screenshots, and test locally — see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ### Skill Ideas
 
 Here are some examples of skills the community could benefit from:

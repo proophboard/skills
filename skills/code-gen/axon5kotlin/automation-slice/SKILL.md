@@ -1,5 +1,5 @@
 ---
-name: em2code-automation-slice-axon5kotlin
+name: axon5kotlin-automation-slice
 description: >
   Implement automation slices (Event to Command) using Axon Framework 5, Vertical Slice Architecture,
   and Event Modeling patterns. An automation is: an Event Handler that reacts to an event by dispatching a command
@@ -14,25 +14,36 @@ description: >
   Understands AF4 @EventHandler/@ProcessingGroup input as one possible source format.
 ---
 
-# Axon Framework 5 Automation Slice Implementation
+# Axon Framework 5 — Automation Slice
 
-An automation reacts to an event by dispatching a command. In Event Modeling: the orange stripe.
+An automation reacts to an event by dispatching a command. In Event Modeling: the **orange stripe**.
 
 There are two kinds:
 - **Stateless**: Direct event-to-command mapping — no stored state needed
-- **With read model**: Needs a private read model (JPA entity + repository) to look up data required for command construction (e.g., iterate over all dwellings matching a creature type)
+- **With read model**: Needs a private read model (JPA entity + repository) to look up data required for command
+  construction (e.g., iterate over all entities matching a category)
+
+## Relationship to prooph board Event Modeling
+
+This skill implements the **automation slice (orange stripe)** from a prooph board Event Modeling board.
+It consumes:
+- The slice's `## Scenarios (GWTs)` section (written with the `slice-scenarios` skill) — GWT format for automations
+  is `Given (events) → Then (command | hotspot | NOTHING)`. Events in Given include read-model-building events
+  first, trigger event last. Command in Then is the dispatched command. Hotspot or NOTHING means no command.
+- The slice's optional `## Implementation Guidelines` — technical requirements beyond the standard pattern
 
 ## Step 0: Discover Target Project Conventions
 
-Read the target project's CLAUDE.md and explore existing slices. Look for:
+Read the target project's context file (e.g., `CLAUDE.md`, `AGENTS.md`, `.cursorrules`) and explore existing slices.
+Look for:
 
 - File splitting conventions (single `.Slice.kt` vs separate files per class)
 - Visibility modifiers (`private` on processor/configuration classes)
-- Metadata handling (`GameMetadata`, `@MetadataValue`)
-- Feature flag patterns (`@ConditionalOnProperty` prefix structure)
-- `additional-spring-configuration-metadata.json` entries
+- Metadata handling — how correlation IDs are attached (see
+  [references/kotlin-extensions.md](references/kotlin-extensions.md) for `AxonMetadata` helpers)
+- Feature flag patterns (Step 4 — optional)
 - YAML config files (`application.yaml`, `application-test.yaml`)
-- **Spring Boot test annotation**: Check if the project defines a **meta-annotation** for `@AxonSpringBootTest` (e.g., a custom annotation that composes `@AxonSpringBootTest` with `@ActiveProfiles`, `@Import` for testcontainers, etc.). Search for classes/annotations annotated with `@AxonSpringBootTest` and check CLAUDE.md for the project's test annotation. If a meta-annotation exists, use it in all integration tests. If not, use `@AxonSpringBootTest` directly but look at existing tests for common patterns (`@ActiveProfiles`, `@Import`, etc.) that should be replicated consistently.
+- Spring Boot test annotation: check if the project defines a meta-annotation for `@AxonSpringBootTest`
 
 ## Step 1: Understand the Input
 
@@ -47,16 +58,16 @@ Extract these elements regardless of input format:
 | **Metadata**           | Which metadata keys to propagate from event to command                 |
 | **Read model needed?** | Does the automation need to look up data not in the event itself?      |
 
-If the Event Modeling artifact includes slice details with `## Scenarios (GWTs)`, use them to derive test cases. Automation GWT pattern: `Given (events) → Then (command | hotspot | NOTHING)` — no When block. Events in Given include read-model-building events first, trigger event last. Command in Then is the dispatched command. Hotspot or NOTHING means no command dispatched.
+If the Event Modeling artifact includes slice details with `## Scenarios (GWTs)`, use them to derive test cases.
 
-If the slice details contain `## Implementation Guidelines`, **follow them** — they describe specific technical requirements that go beyond the standard slice pattern.
+If the slice details contain `## Implementation Guidelines`, **follow them**.
 
 ### Stateless vs With Read Model Decision
 
 Choose **with read model** when:
-- The automation needs data that is NOT in the trigger event (e.g., "find all dwellings for creature X")
+- The automation needs data that is NOT in the trigger event (e.g., "find all entities of type X")
 - The automation must iterate over a collection of entities to dispatch multiple commands
-- The automation combines data from multiple event types (one builds the read model, another triggers the command)
+- The automation combines data from multiple event types (one builds the read model, another triggers commands)
 
 Choose **stateless** when:
 - All data needed for the command is in the trigger event + metadata
@@ -81,41 +92,31 @@ Function<A, B> interface             fun interface Name : (A) -> B
 
 ## Step 2: Ensure Events Exist
 
-Before implementing the automation, verify that all events the processor will handle exist in the codebase. If they
-don't, create them **first**.
+Before implementing the automation, verify that all events the processor will handle exist in the codebase.
+If they don't, create them **first**.
 
 ### Event Hierarchy
 
-Events follow a three-level hierarchy:
+Recommended hierarchy (check what the target project already uses):
 
 ```
-DomainEvent                          ← marker (shared.domain)
-  └─ HeroesEvent                     ← project-level marker (shared.domain)
-       └─ {Context}Event             ← sealed interface per bounded context ({context}.events)
-            └─ {ConcreteEvent}       ← data class ({context}.events)
+DomainEvent                        ← root marker (project-defined)
+  └─ {Context}Event                ← sealed interface per bounded context ({context}/events/)
+       └─ {ConcreteEvent}          ← data class ({context}/events/)
 ```
 
 ### Context Event Interface (if it doesn't exist)
 
-Each bounded context has a **sealed interface** in `{context}/events/` that extends `HeroesEvent` and declares the tag
-property with `@get:EventTag`. All events in the context implement this interface, inheriting the tag automatically.
-
 ```kotlin
-// File: {context}/events/{Context}Event.kt
-sealed interface {Context}Event : HeroesEvent {
+sealed interface {Context}Event : DomainEvent {
     @get:EventTag(EventTags.{TAG_CONSTANT})
     val {tagProperty}: {IdType}
 }
 ```
 
-Also ensure the tag constant exists in `EventTags.kt`.
-
 ### Concrete Event Classes
 
-Each event is a separate file in `{context}/events/`:
-
 ```kotlin
-// File: {context}/events/{EventName}.kt
 @Event(namespace = "{Context}", name = "{EventName}", version = "1.0.0")
 data class {EventName}(
     override val {tagProperty}: {IdType},
@@ -127,7 +128,6 @@ Key rules:
 - `@Event(namespace, name, version)` — import from `org.axonframework.messaging.eventhandling.annotation.Event`
 - `namespace` = bounded context name, `name` = class name, `version` = `"1.0.0"` for new events
 - Use value object types for properties
-- When an event participates in a Dynamic Consistency Boundary (DCB), add extra `@EventTag` on cross-stream properties
 
 ## Step 3: Implement the Automation
 
@@ -136,20 +136,21 @@ Key rules:
 **Always use `CommandDispatcher`** to dispatch commands from within `@EventHandler` methods:
 
 - `CommandDispatcher` is AF5's preferred way to send commands from within message handlers
-- It is **ProcessingContext-scoped** — inject it as a **method parameter** on the `@EventHandler`, NOT as a constructor parameter
+- It is **ProcessingContext-scoped** — inject it as a **method parameter** on the `@EventHandler`, NOT as a
+  constructor parameter
 - `CommandGateway` is a singleton intended for external callers (REST controllers, etc.)
 
 ```kotlin
 // CORRECT: CommandDispatcher as method parameter
 @EventHandler
-fun react(event: MyEvent, commandDispatcher: CommandDispatcher) {
+fun react(event: {TriggerEvent}, commandDispatcher: CommandDispatcher) {
     commandDispatcher.send(command, metadata)
 }
 
 // WRONG: CommandGateway as constructor parameter
 class MyProcessor(private val commandGateway: CommandGateway) {
     @EventHandler
-    fun react(event: MyEvent) {
+    fun react(event: {TriggerEvent}) {
         commandGateway.send(command, metadata) // Don't do this
     }
 }
@@ -157,7 +158,8 @@ class MyProcessor(private val commandGateway: CommandGateway) {
 
 ### Error Propagation with CompletableFuture
 
-When the automation dispatches commands, return a `CompletableFuture` from the `@EventHandler` method so AF5 awaits command completion. If a command fails, the event handler fails too, and the event processor will retry.
+When the automation dispatches commands, return a `CompletableFuture` from the `@EventHandler` method so AF5 awaits
+command completion. If a command fails, the event handler fails too, and the event processor will retry.
 
 - `commandDispatcher.send(command, metadata)` returns a `CommandResult`
 - `CommandResult.resultMessage` returns `CompletableFuture`
@@ -176,7 +178,7 @@ An automation slice has up to 3 files (adapt to project conventions on splitting
 A `fun interface` for injectable logic deriving command properties from event data:
 
 ```kotlin
-fun interface WeekSymbolCalculator : (MonthWeek) -> WeekSymbol
+fun interface {StrategyName} : ({InputType}) -> {OutputType}
 ```
 
 Skip if the mapping from event to command is trivial/direct.
@@ -184,35 +186,34 @@ Skip if the mapping from event to command is trivial/direct.
 #### File 2: Configuration (if strategy exists)
 
 ```kotlin
-@ConditionalOnProperty(prefix = "slices.{context}.automation", name = ["{automationname}.enabled"])
+@ConditionalOnProperty(...)  // if using feature flags
 @Configuration
 private class {AutomationName}Configuration {
 
     @Bean
-    fun weekSymbolCalculator(): WeekSymbolCalculator =
-        WeekSymbolCalculator { _ -> WeekSymbol(weekOf = CreatureId("angel"), growth = (1..5).random()) }
+    fun {strategyName}(): {StrategyName} =
+        {StrategyName} { input -> /* default implementation */ }
 }
 ```
 
 #### File 3: Processor
 
 ```kotlin
-@ConditionalOnProperty(prefix = "slices.{context}.automation", name = ["{automationname}.enabled"])
+@ConditionalOnProperty(...)  // if using feature flags
 @Component
 private class {AutomationName}Processor(
-    private val calculator: WeekSymbolCalculator  // if strategy exists
+    private val strategy: {StrategyName}  // if strategy exists
 ) {
 
     @EventHandler
     fun react(
         event: {TriggerEvent},
-        @MetadataValue(GameMetadata.GAME_ID_KEY) gameId: String,
-        @MetadataValue(GameMetadata.PLAYER_ID_KEY) playerId: String,
+        @MetadataValue("tenantId") tenantId: String,  // use the project's correlation key name
         commandDispatcher: CommandDispatcher
     ) {
         if ({condition}) {
             val command = {TargetCommand}(...)
-            val metadata = GameMetadata.with(GameId(gameId), PlayerId(playerId))
+            val metadata = AxonMetadata.with("tenantId", tenantId)
             commandDispatcher.send(command, metadata)
         }
     }
@@ -223,7 +224,8 @@ private class {AutomationName}Processor(
 
 ### Automation with Read Model
 
-When the automation needs to look up data, create a dedicated read model within the same slice. **Slices are independent** — never reuse another slice's read model.
+When the automation needs to look up data, create a dedicated read model within the same slice.
+**Slices are independent** — never reuse another slice's read model.
 
 Everything goes in a single `.Slice.kt` file:
 
@@ -233,10 +235,10 @@ Everything goes in a single `.Slice.kt` file:
 @Entity
 @Table(
     name = "{context}_automation_{readmodel_name}",
-    indexes = [Index(name = "idx_{context}_{readmodel_name}_{columns}", columnList = "gameId, creatureId")]
+    indexes = [Index(name = "idx_{context}_{readmodel_name}_{columns}", columnList = "tenantId, categoryId")]
 )
 internal data class {ReadModelName}(
-    val gameId: String,
+    val tenantId: String,
     @Id
     val primaryId: String,
     val filterField: String
@@ -245,30 +247,31 @@ internal data class {ReadModelName}(
 
 Key rules:
 - **Composite index** on the columns used in `WHERE` clause — filter at DB level, not client-side
-- **Table name prefixed** with context to avoid collisions (e.g., `astrologers_automation_built_dwelling`)
+- **Table name prefixed** with context to avoid collisions
 - **`internal`** visibility — only the processor in this slice should access it
 
 #### Repository
 
 ```kotlin
-@ConditionalOnProperty(prefix = "slices.{context}.automation", name = ["{automationname}.enabled"])
+@ConditionalOnProperty(...)  // if using feature flags
 @Repository
 private interface {ReadModelName}Repository : JpaRepository<{ReadModelName}, String> {
-    fun findAllByGameIdAndFilterField(gameId: String, filterField: String): List<{ReadModelName}>
+    fun findAllByTenantIdAndFilterField(tenantId: String, filterField: String): List<{ReadModelName}>
 }
 ```
 
 Key rules:
-- **DB-level filtering** — use Spring Data derived queries that filter on all relevant columns, not `findAll()` + client-side filter
+- **DB-level filtering** — use Spring Data derived queries that filter on all relevant columns, not `findAll()` +
+  client-side filter
 - **`private`** visibility
-- **Same `@ConditionalOnProperty`** as the processor
+- **Same `@ConditionalOnProperty`** as the processor (if using feature flags)
 
 #### Processor
 
 ```kotlin
-@ConditionalOnProperty(prefix = "slices.{context}.automation", name = ["{automationname}.enabled"])
+@ConditionalOnProperty(...)  // if using feature flags
 @Component
-@SequencingPolicy(type = MetadataSequencingPolicy::class, parameters = ["gameId"])
+@SequencingPolicy(type = MetadataSequencingPolicy::class, parameters = ["tenantId"])
 private class {AutomationName}Processor(
     private val repository: {ReadModelName}Repository
 ) {
@@ -276,33 +279,32 @@ private class {AutomationName}Processor(
     @EventHandler
     fun react(
         event: {TriggerEvent},
-        @MetadataValue(GameMetadata.GAME_ID_KEY) gameId: String,
-        @MetadataValue(GameMetadata.PLAYER_ID_KEY) playerId: String,
+        @MetadataValue("tenantId") tenantId: String,
         commandDispatcher: CommandDispatcher
     ): CompletableFuture<Void> {
-        val futures = repository.findAllByGameIdAndFilterField(gameId, event.filterValue)
-            .map { entity -> dispatchCommand(entity, event, playerId, commandDispatcher) }
+        val futures = repository.findAllByTenantIdAndFilterField(tenantId, event.filterValue)
+            .map { entity -> dispatchCommand(entity, event, tenantId, commandDispatcher) }
         return CompletableFuture.allOf(*futures.toTypedArray())
     }
 
     private fun dispatchCommand(
         entity: {ReadModelName},
         event: {TriggerEvent},
-        playerId: String,
+        tenantId: String,
         commandDispatcher: CommandDispatcher
     ): CompletableFuture<out Any?> {
         val command = {TargetCommand}(
             // map entity fields + event data to command properties
         )
-        val metadata = GameMetadata.with(GameId(entity.gameId), PlayerId(playerId))
+        val metadata = AxonMetadata.with("tenantId", tenantId)
         return commandDispatcher.send(command, metadata).resultMessage
     }
 
     @EventHandler
-    fun on(event: {BuildingEvent}, @MetadataValue(GameMetadata.GAME_ID_KEY) gameId: String) {
+    fun on(event: {BuildingEvent}, @MetadataValue("tenantId") tenantId: String) {
         repository.save(
             {ReadModelName}(
-                gameId = gameId,
+                tenantId = tenantId,
                 primaryId = event.entityId.raw,
                 filterField = event.filterValue.raw
             )
@@ -312,28 +314,41 @@ private class {AutomationName}Processor(
 ```
 
 Key rules:
-- **`@SequencingPolicy(MetadataSequencingPolicy, "gameId")`** — ensures events for the same game are processed sequentially. This prevents race conditions where a `DwellingBuilt` and `WeekSymbolProclaimed` for the same game could be processed concurrently, causing the read model to be inconsistent
+- **`@SequencingPolicy(MetadataSequencingPolicy, "tenantId")`** — ensures events for the same tenant/correlation unit
+  are processed sequentially, preventing race conditions on the read model
 - **`CommandDispatcher` as method parameter** — ProcessingContext-scoped, not constructor-injected
-- **`CompletableFuture<Void>` return** — `CompletableFuture.allOf()` awaits all dispatched commands; if any fails, the event handler fails and the processor retries
+- **`CompletableFuture<Void>` return** — `CompletableFuture.allOf()` awaits all dispatched commands; if any fails,
+  the event handler fails and the processor retries
 - **`commandDispatcher.send(command, metadata).resultMessage`** — returns `CompletableFuture` for the command result
-- **Two `@EventHandler` methods in one class**: one builds the read model (e.g., `DwellingBuilt`), the other reacts by dispatching commands (e.g., `WeekSymbolProclaimed`)
+- **Two `@EventHandler` methods in one class**: one builds the read model, the other reacts by dispatching commands
 - **Repository is constructor-injected** (Spring bean), `CommandDispatcher` is method-injected (ProcessingContext)
 
-## Step 4: Add Feature Flag
+## Step 4: Feature Flags (Optional)
 
-Add `@ConditionalOnProperty` to processor, repository (if with read model), and configuration (if exists). Update ALL of:
+**Check the target project's convention first** — scan existing slices for `@ConditionalOnProperty`, `@Profile`, or
+custom feature-flag integrations.
 
-- `application.yaml` — `slices.{context}.automation.{name}.enabled: true`
-- `application-test.yaml` — `slices.{context}.automation.{name}.enabled: false`
-- `META-INF/additional-spring-configuration-metadata.json` — add entry
+If no clear convention exists, ask the user:
+> How should slice-level feature flags be managed?
+> - **`@ConditionalOnProperty`** (Spring Boot default)
+> - **Custom flag library** (FF4J, Unleash, LaunchDarkly, etc.)
+> - **No feature flags** — ship all slices unconditionally
+
+See [references/feature-flag-patterns.md](references/feature-flag-patterns.md) for the full `@ConditionalOnProperty`
+example (processor, repository, `application.yaml`, `additional-spring-configuration-metadata.json`) and alternatives.
 
 ## Step 5: Implement Tests
 
 Spring Boot integration test with `AxonTestFixture` Kotlin DSL.
 
-**Critical**: Enable BOTH the automation AND its target write slice in `@TestPropertySource`.
+**Critical**: Enable BOTH the automation AND its target write slice in the feature flag settings.
 
 If the automation uses a strategy, override it with a deterministic `@TestConfiguration` bean.
+
+The `AxonTestFixture` Kotlin DSL must be copied into the project's test sources.
+See [references/axon-test-fixture-kotlin-dsl.md](references/axon-test-fixture-kotlin-dsl.md).
+
+For `AxonMetadata` — use the typealias from [references/kotlin-extensions.md](references/kotlin-extensions.md).
 
 ### AF5 Imports
 
@@ -352,7 +367,7 @@ import org.axonframework.messaging.eventhandling.sequencing.MetadataSequencingPo
 ```kotlin
 fixture.Scenario {
     Given {
-        event({TriggerEvent}(...), gameMetadata)
+        event({TriggerEvent}(...), metadata)
     } Then {
         await({ it.commands(expectedCommand) })
     }
@@ -364,8 +379,8 @@ fixture.Scenario {
 ```kotlin
 fixture.Scenario {
     Given {
-        event({BuildingEvent}(...), gameMetadata)  // builds read model
-        event({TriggerEvent}(...), gameMetadata)   // triggers commands
+        event({BuildingEvent}(...), metadata)  // builds read model
+        event({TriggerEvent}(...), metadata)   // triggers commands
     } Then {
         await({
             it.commandsSatisfy { commands ->
@@ -388,7 +403,7 @@ fixture.Scenario {
 ```kotlin
 fixture.Scenario {
     Given {
-        event({TriggerEvent}(... /* condition not met */), gameMetadata)
+        event({TriggerEvent}(... /* condition not met */), metadata)
     } Then {
         await({ it.noCommands() })
     }
@@ -397,37 +412,40 @@ fixture.Scenario {
 
 ### Testing Automations with Read Model — Important Notes
 
-1. **`RecordingCommandBus` accumulates commands** across test methods in the same Spring context. It is NOT reset between tests when using `Given { } Then { }` (only the `When { }` phase resets it).
+1. **`RecordingCommandBus` accumulates commands** across test methods in the same Spring context. It is NOT reset
+   between tests when using `Given { } Then { }` (only the `When { }` phase resets it).
 
-2. **Isolate tests using entity ID filtering**: Generate unique IDs per test method, then filter assertions to only check commands relevant to the current test's IDs:
+2. **Isolate tests using entity ID filtering**: Generate unique IDs per test method, then filter assertions to only
+   check commands relevant to the current test's IDs:
    ```kotlin
-   val testDwellingIds = setOf(dwelling1, dwelling2)
+   val testEntityIds = setOf(entity1, entity2)
    // ... in assertion:
-   .filter { cmd -> cmd.dwellingId in testDwellingIds }
+   .filter { cmd -> cmd.entityId in testEntityIds }
    ```
 
-3. **Use `commandsSatisfy` + `containsExactlyInAnyOrder`**: JPA/DB returns results in unpredictable order, so commands may be dispatched in any order. Don't use `commands(cmd1, cmd2)` which asserts strict ordering.
+3. **Use `commandsSatisfy` + `containsExactlyInAnyOrder`**: JPA/DB returns results in unpredictable order, so
+   commands may be dispatched in any order. Don't use `commands(cmd1, cmd2)` which asserts strict ordering.
 
-4. **Put all events in a single `Given` block**: For temporal ordering tests (e.g., "only increase dwellings built before the proclamation"), interleave building events and trigger events in a single `Given` block and assert all expected commands at once.
+4. **Put all events in a single `Given` block**: For temporal ordering tests, interleave building events and trigger
+   events in a single `Given` block and assert all expected commands at once.
 
 ### Test Cases to Cover
 
 **Stateless automations:**
-1. **Happy path**: Event matching condition -> expected command dispatched
-2. **Condition not met**: Event not matching condition -> no commands dispatched
+1. **Happy path**: Event matching condition → expected command dispatched
+2. **Condition not met**: Event not matching condition → no commands dispatched
 
 **Automations with read model:**
-1. **Happy path**: Build read model entries + trigger event -> commands for matching entries only
-2. **Non-matching entries**: Build entries of different types + trigger for one type -> only matching type gets commands
-3. **Temporal ordering**: Build some entries, trigger, build more entries, trigger again -> each trigger only affects entries that existed at that point
+1. **Happy path**: Build read model entries + trigger event → commands for matching entries only
+2. **Non-matching entries**: Build entries of different types + trigger for one type → only matching type gets commands
+3. **Temporal ordering**: Build some entries, trigger, build more entries, trigger again → each trigger only affects
+   entries that existed at that point
 
 ### Mapping Event Model GWT Scenarios to Tests
 
-When the slice details contain `## Scenarios (GWTs)`, map each scenario to a test method:
-
 | GWT Element | Test Code |
 |---|---|
-| `:::element event` in Given | `Given { event(EventClass(...), gameMetadata) }` |
+| `:::element event` in Given | `Given { event(EventClass(...), metadata) }` |
 | Multiple events in Given | Multiple `event(...)` calls — read-model-building events first, trigger event last |
 | `:::element command` in Then | `Then { await({ it.commands(expectedCommand) }) }` |
 | `:::element hotspot` in Then | `Then { await({ it.noCommands() }) }` — exception/failure |
@@ -437,5 +455,10 @@ Properties in `:::element` blocks are rule-relevant only — fill remaining cons
 
 ## References
 
-- [Stateless Automation Test Example](references/automation-test-example.md) — Complete working test with deterministic strategy override
-- [Automation with Read Model Test Example](references/automation-with-read-model-test-example.md) — Complete working test with private read model and multi-command assertions
+- [Stateless Automation Test Example](references/automation-test-example.md) — Complete working test with
+  deterministic strategy override
+- [Automation with Read Model Test Example](references/automation-with-read-model-test-example.md) — Complete
+  working test with private read model and multi-command assertions
+- [Feature Flag Patterns](references/feature-flag-patterns.md) — `@ConditionalOnProperty` and alternatives
+- [Kotlin Extensions](references/kotlin-extensions.md) — `AxonMetadata` typealias and helper functions
+- [AxonTestFixture Kotlin DSL](references/axon-test-fixture-kotlin-dsl.md) — Given-When-Then DSL source to copy into the project

@@ -1,5 +1,8 @@
 # Automation with Read Model Test Example: WhenWeekSymbolProclaimedThenIncreaseDwellingAvailableCreatures
 
+> **Note**: This example uses the Heroes of Domain-Driven Design domain (astrologers, creature recruitment).
+> Substitute your own bounded context names and event types when following this pattern.
+
 ## Automation Under Test
 
 Reacts to `WeekSymbolProclaimed` event (from Astrologers context). Looks up all dwellings matching the proclaimed creature type from a private read model (built from `DwellingBuilt` events), then dispatches `IncreaseAvailableCreatures` commands for each matching dwelling.
@@ -29,7 +32,7 @@ internal data class BuiltDwellingReadModel(
     val creatureId: String
 )
 
-@ConditionalOnProperty(
+@ConditionalOnProperty(  // remove if not using feature flags
     prefix = "slices.astrologers.automation",
     name = ["whenweeksymbolproclaimedthenincreasedwellingavailablecreatures.enabled"]
 )
@@ -38,7 +41,7 @@ private interface BuiltDwellingReadModelRepository : JpaRepository<BuiltDwelling
     fun findAllByGameIdAndCreatureId(gameId: String, creatureId: String): List<BuiltDwellingReadModel>
 }
 
-@ConditionalOnProperty(
+@ConditionalOnProperty(  // remove if not using feature flags
     prefix = "slices.astrologers.automation",
     name = ["whenweeksymbolproclaimedthenincreasedwellingavailablecreatures.enabled"]
 )
@@ -51,8 +54,8 @@ private class WhenWeekSymbolProclaimedThenIncreaseDwellingAvailableCreaturesProc
     @EventHandler
     fun react(
         event: WeekSymbolProclaimed,
-        @MetadataValue(GameMetadata.GAME_ID_KEY) gameId: String,
-        @MetadataValue(GameMetadata.PLAYER_ID_KEY) playerId: String,
+        @MetadataValue("gameId") gameId: String,   // use your project's correlation key name
+        @MetadataValue("playerId") playerId: String,
         commandDispatcher: CommandDispatcher,
     ): CompletableFuture<Void> {
         val futures = repository.findAllByGameIdAndCreatureId(gameId, event.weekOf.raw)
@@ -71,12 +74,12 @@ private class WhenWeekSymbolProclaimedThenIncreaseDwellingAvailableCreaturesProc
             creatureId = CreatureId(dwelling.creatureId),
             increaseBy = Quantity(increaseBy)
         )
-        val metadata = GameMetadata.with(GameId(dwelling.gameId), PlayerId(playerId))
+        val metadata = AxonMetadata.with("gameId", dwelling.gameId).and("playerId", playerId)
         return commandDispatcher.send(command, metadata).resultMessage
     }
 
     @EventHandler
-    fun on(event: DwellingBuilt, @MetadataValue(GameMetadata.GAME_ID_KEY) gameId: String) {
+    fun on(event: DwellingBuilt, @MetadataValue("gameId") gameId: String) {
         repository.save(
             BuiltDwellingReadModel(
                 gameId = gameId,
@@ -91,13 +94,18 @@ private class WhenWeekSymbolProclaimedThenIncreaseDwellingAvailableCreaturesProc
 ## Complete Test
 
 ```kotlin
+import org.axonframework.extension.springboot.test.AxonSpringBootTest  // from AF5 spring-boot-starter-test module
+                                                                        // If the project defines a meta-annotation
+                                                                        // wrapping @AxonSpringBootTest with shared config
+                                                                        // (profiles, Testcontainers, etc.), use that instead.
+
 @TestPropertySource(
     properties = [
         "slices.astrologers.automation.whenweeksymbolproclaimedthenincreasedwellingavailablecreatures.enabled=true",
         "slices.creaturerecruitment.write.increaseavailablecreatures.enabled=true"
     ]
 )
-@HeroesAxonSpringBootTest
+@AxonSpringBootTest
 internal class WhenWeekSymbolProclaimedThenIncreaseDwellingAvailableCreaturesSpringSliceTest @Autowired constructor(
     private val fixture: AxonTestFixture
 ) {
@@ -196,7 +204,7 @@ internal class WhenWeekSymbolProclaimedThenIncreaseDwellingAvailableCreaturesSpr
 - **`commandsSatisfy` with `containsExactlyInAnyOrder`**: Commands may be dispatched in any order (JPA returns results in unpredictable order). Never use `commands(cmd1, cmd2)` for automations with read model — it asserts strict ordering.
 - **Filter by test entity IDs**: `RecordingCommandBus` accumulates commands across test methods in the same Spring context. The `Given { } Then { }` path does NOT reset the bus (only `When { }` does). Filter assertions to only check commands for the current test's entity IDs.
 - **Temporal ordering test**: Interleave building events and trigger events in a single `Given` block. Assert ALL expected commands across ALL triggers at once, since `RecordingCommandBus` accumulates everything.
-- **Metadata**: `gameMetadata` must be passed with every event — the processor extracts `gameId` and `playerId` via `@MetadataValue`.
+- **Metadata**: Metadata must be passed with every event — the processor extracts correlation keys via `@MetadataValue`. Use your project's actual key names (e.g., `"tenantId"`, `"gameId"`, etc.).
 - **`@SequencingPolicy(MetadataSequencingPolicy, "gameId")`**: Ensures events for the same game are processed sequentially by the event processor, preventing race conditions on the read model.
 - **`CompletableFuture<Void>` return**: The processor returns `CompletableFuture.allOf()` so AF5 awaits all command dispatches. If any command fails, the event handler fails and the processor retries.
 - **`CommandDispatcher` as method parameter**: ProcessingContext-scoped, auto-injected by AF5 into `@EventHandler` methods. NOT constructor-injected like `CommandGateway`.

@@ -1,4 +1,7 @@
-# Automation Test Example: WhenWeekStartedThenProclaimWeekSymbol
+# Stateless Automation Test Example: WhenWeekStartedThenProclaimWeekSymbol
+
+> **Note**: This example uses the Heroes of Domain-Driven Design domain (calendar, astrologers).
+> Substitute your own bounded context names and event types when following this pattern.
 
 ## Automation Under Test
 
@@ -18,7 +21,6 @@ astrologers/automation/whenweekstartedthenproclaimweeksymbol/
 ```kotlin
 package com.dddheroes.heroesofddd.astrologers.automation.whenweekstartedthenproclaimweeksymbol
 
-import com.dddheroes.heroesofddd.HeroesAxonSpringBootTest
 import com.dddheroes.heroesofddd.astrologers.write.AstrologersId
 import com.dddheroes.heroesofddd.astrologers.write.MonthWeek
 import com.dddheroes.heroesofddd.astrologers.write.WeekSymbol
@@ -27,6 +29,10 @@ import com.dddheroes.heroesofddd.calendar.events.DayStarted
 import com.dddheroes.heroesofddd.calendar.write.CalendarId
 import com.dddheroes.heroesofddd.shared.domain.identifiers.CreatureId
 import org.axonframework.extensions.kotlin.AxonMetadata
+import org.axonframework.extension.springboot.test.AxonSpringBootTest  // from AF5 spring-boot-starter-test module
+                                                                        // If the project defines a meta-annotation
+                                                                        // wrapping @AxonSpringBootTest with shared config
+                                                                        // (profiles, Testcontainers, etc.), use that instead.
 import org.axonframework.test.fixture.AxonTestFixture
 import org.axonframework.test.fixture.Given
 import org.axonframework.test.fixture.Scenario
@@ -46,7 +52,7 @@ import java.util.*
         "slices.astrologers.write.proclaimweeksymbol.enabled=true"
     ]
 )
-@HeroesAxonSpringBootTest
+@AxonSpringBootTest
 internal class WhenWeekStartedThenProclaimWeekSymbolSpringSliceTest @Autowired constructor(
     private val fixture: AxonTestFixture
 ) {
@@ -104,4 +110,4 @@ internal class WhenWeekStartedThenProclaimWeekSymbolSpringSliceTest @Autowired c
 - **`Scenario` wrapper**: Wraps `Given { } Then { }` for readability.
 - **`await` with `commands()`**: Automation dispatches commands asynchronously — `await` waits for processing. `commands(expectedCommand)` asserts exact command payload equality.
 - **`await` with `noCommands()`**: When the event condition is not met, assert no commands were dispatched.
-- **Metadata**: `gameMetadata` must be passed with every event — the processor extracts `gameId` and `playerId` via `@MetadataValue`.
+- **Metadata**: `gameMetadata` must be passed with every event — the processor extracts `gameId` and `playerId` via `@MetadataValue`. Use your project's actual correlation key names.

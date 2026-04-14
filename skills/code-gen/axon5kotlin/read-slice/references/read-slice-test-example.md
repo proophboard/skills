@@ -35,7 +35,7 @@ data class DwellingReadModel(
 ```kotlin
 package com.dddheroes.heroesofddd.creaturerecruitment.read.getalldwellings
 
-import com.dddheroes.heroesofddd.HeroesAxonSpringBootTest
+import org.axonframework.extension.springboot.test.AxonSpringBootTest  // from AF5 spring-boot-starter-test module
 import com.dddheroes.heroesofddd.creaturerecruitment.events.AvailableCreaturesChanged
 import com.dddheroes.heroesofddd.creaturerecruitment.events.DwellingBuilt
 import com.dddheroes.heroesofddd.shared.domain.identifiers.CreatureId

@@ -1,5 +1,8 @@
 # AF5 Write Slice Patterns
 
+> **Note**: Code examples use the Heroes of Domain-Driven Design domain (dwellings, creatures, armies).
+> Substitute your own bounded context names and event types when following these patterns.
+
 Complete reference for implementing write slices in Axon Framework 5 with Vertical Slice Architecture.
 
 ## Table of Contents
@@ -32,7 +35,7 @@ import com.example.sdk.application.CommandHandlerResult
 import com.example.shared.application.GameMetadata
 import com.example.sdk.application.resultOf
 import com.example.sdk.application.toCommandResult
-import com.example.shared.domain.HeroesEvent
+import com.example.shared.domain.DomainEvent
 import com.example.shared.domain.identifiers.*
 import com.example.shared.domain.valueobjects.Resources
 import com.example.shared.restapi.Headers
@@ -69,7 +72,7 @@ private data class State(val isBuilt: Boolean)
 
 private val initialState = State(isBuilt = false)
 
-private fun decide(command: BuildDwelling, state: State): List<HeroesEvent> {
+private fun decide(command: BuildDwelling, state: State): List<DomainEvent> {
     if (state.isBuilt) {
         return emptyList()
     }
@@ -143,7 +146,7 @@ private class BuildDwellingRestApi(private val commandGateway: CommandGateway) {
             CreatureId(requestBody.creatureId),
             Resources.of(requestBody.costPerTroop)
         )
-        val metadata = GameMetadata.with(GameId(gameId), PlayerId(playerId))
+        val metadata = AxonMetadata.with("tenantId", gameId).and("playerId", playerId)
 
         return commandGateway.send(command, metadata)
             .resultAs(CommandHandlerResult::class.java)
@@ -159,7 +162,7 @@ private class BuildDwellingRestApi(private val commandGateway: CommandGateway) {
 - `@InjectEntity(idProperty = EventTags.DWELLING_ID)` - the command property named `dwellingId` is used to filter events
   by tag
 - `@ConditionalOnProperty` on BOTH entity and handler classes (and REST)
-- Tested with Spring Boot test (project's `@AxonSpringBootTest` meta-annotation + `springTestFixture`)
+- Tested with `@AxonSpringBootTest` (or the project's meta-annotation wrapping it)
 
 ---
 
@@ -298,7 +301,7 @@ private val initialState = State(
     creaturesInArmy = emptyMap()
 )
 
-private fun decide(command: RecruitCreature, state: State): List<HeroesEvent> {
+private fun decide(command: RecruitCreature, state: State): List<DomainEvent> {
     if (state.creatureId != command.creatureId || state.availableCreatures < command.quantity) {
         throw IllegalStateException("Recruit creatures cannot exceed available creatures")
     }
@@ -331,9 +334,9 @@ private fun decide(command: RecruitCreature, state: State): List<HeroesEvent> {
     )
 }
 
-// Cross-module slice: HeroesEvent is non-sealed, so `else -> state` IS allowed here.
-// The compiler cannot enforce exhaustiveness on non-sealed types, so `else` is the fallback.
-private fun evolve(state: State, event: HeroesEvent): State = when (event) {
+// Cross-module slice: DomainEvent (or the project's root event interface) is non-sealed,
+// so `else -> state` IS allowed here. The compiler cannot enforce exhaustiveness on non-sealed types.
+private fun evolve(state: State, event: DomainEvent): State = when (event) {
     is DwellingBuilt -> state.copy(creatureId = event.creatureId, costPerTroop = event.costPerTroop)
     is AvailableCreaturesChanged -> state.copy(availableCreatures = event.changedTo)
     is CreatureAddedToArmy -> {
@@ -347,7 +350,7 @@ private fun evolve(state: State, event: HeroesEvent): State = when (event) {
         else state.creaturesInArmy + (event.creatureId to newQty)
         state.copy(creaturesInArmy = updated)
     }
-    else -> state  // allowed: HeroesEvent is non-sealed
+    else -> state  // allowed: DomainEvent (non-sealed root interface)
 }
 
 ////////////////////////////////////////////
@@ -452,7 +455,7 @@ private class RecruitCreatureRestApi(private val commandGateway: CommandGateway)
             quantity = Quantity(requestBody.quantity),
             expectedCost = Resources.of(requestBody.expectedCost)
         )
-        val metadata = GameMetadata.with(GameId(gameId), PlayerId(playerId))
+        val metadata = AxonMetadata.with("tenantId", gameId).and("playerId", playerId)
         return commandGateway.send(command, metadata)
             .resultAs(CommandHandlerResult::class.java)
             .toResponseEntity()
@@ -503,7 +506,7 @@ if (violated) return listOf(SomeFailureEvent(reason = "..."))
 
 ```kotlin
 // Sealed interface hierarchy
-sealed interface DwellingEvent : HeroesEvent {
+sealed interface DwellingEvent : DomainEvent {
     @get:EventTag(EventTags.DWELLING_ID)
     val dwellingId: DwellingId
 }
@@ -575,28 +578,37 @@ internal class RecruitCreatureUnitTest {
 
 ```kotlin
 @TestPropertySource(properties = ["slices.creaturerecruitment.write.builddwelling.enabled=true"])
-@HeroesAxonSpringBootTest
-internal class BuildDwellingSpringSliceTest @Autowired constructor(configuration: AxonConfiguration) {
-    private val sliceUnderTest: AxonTestFixture = springTestFixture(configuration)
+@AxonSpringBootTest  // org.axonframework.extension.springboot.test.AxonSpringBootTest
+             // If the project defines a meta-annotation wrapping @AxonSpringBootTest with shared config,
+             // use that instead (check CLAUDE.md / AGENTS.md for the project's test annotation).
+internal class BuildDwellingSpringSliceTest @Autowired constructor(private val fixture: AxonTestFixture) {
+
+    private val metadata = AxonMetadata.with("tenantId", UUID.randomUUID().toString())
 
     @Test
     fun `given not built dwelling, when build, then built`() {
-        sliceUnderTest
-            .given().noPriorActivity()
-            .`when`().command(BuildDwelling(...), gameMetadata)
-        .then()
-            .resultMessagePayload(CommandHandlerResult.Success)
-            .events(DwellingBuilt(...))
+        fixture.Scenario {
+            Given { noPriorActivity() } When {
+                command(BuildDwelling(...), metadata)
+            } Then {
+                resultMessagePayload(CommandHandlerResult.Success)
+                events(DwellingBuilt(...))
+            }
+        }
     }
 
     @Test
     fun `given already built, when build again, then no events`() {
-        sliceUnderTest
-            .given().event(DwellingBuilt(...), gameMetadata)
-        .`when`().command(BuildDwelling(...), gameMetadata)
-        .then()
-            .resultMessagePayload(CommandHandlerResult.Success)
-            .noEvents()
+        fixture.Scenario {
+            Given {
+                event(DwellingBuilt(...), metadata)
+            } When {
+                command(BuildDwelling(...), metadata)
+            } Then {
+                resultMessagePayload(CommandHandlerResult.Success)
+                noEvents()
+            }
+        }
     }
 }
 ```
@@ -604,72 +616,67 @@ internal class BuildDwellingSpringSliceTest @Autowired constructor(configuration
 ### REST API Test (Presentation layer)
 
 Tests the REST controller in isolation — mocked `CommandGateway`, no Axon Server, no event store.
+Uses RestAssured with `@WebMvcTest`. See also [rest-api-patterns.md](rest-api-patterns.md) for more examples.
 
 ```kotlin
-@RestAssuredMockMvcTest
-@AxonGatewaysMockTest
+@WebMvcTest(BuildDwellingRestApi::class)
 @TestPropertySource(properties = ["slices.creaturerecruitment.write.builddwelling.enabled=true"])
-internal class BuildDwellingRestApiTest @Autowired constructor(val gateways: AxonGatewaysMock) {
+internal class BuildDwellingRestApiTest {
 
-    private val gameId = GameId.random()
-    private val playerId = PlayerId.random()
+    @Autowired
+    private lateinit var mockMvc: MockMvc
+
+    @MockBean
+    private lateinit var commandGateway: CommandGateway
+
     private val dwellingId = DwellingId.random()
 
     @Test
     fun `command success - returns 204 No Content`() {
-        gateways.assumeCommandReturns<BuildDwelling>(Success)
+        `when`(commandGateway.send(any(), any()))
+            .thenReturn(CompletableFuture.completedFuture(CommandHandlerResult.Success))
 
-        Given {
-            pathParam("gameId", gameId.raw)
-            pathParam("dwellingId", dwellingId.raw)
-            header(Headers.PLAYER_ID, playerId.raw)
-            contentType(ContentType.JSON)
-            body("""
-                {
-                  "creatureId": "angel",
-                  "costPerTroop": {"gold": 3000}
-                }
-            """)
-        } When {
-            async().put("/games/{gameId}/dwellings/{dwellingId}")
-        } Then {
-            statusCode(HttpStatus.NO_CONTENT.value())
-        }
+        RestAssured.given()
+            .mockMvc(mockMvc)
+            .pathParam("gameId", "game-1")
+            .pathParam("dwellingId", dwellingId.raw)
+            .header("X-Player-ID", "player-1")
+            .contentType(ContentType.JSON)
+            .body("""{ "creatureId": "angel", "costPerTroop": {"gold": 3000} }""")
+            .`when`()
+            .async().put("/games/{gameId}/dwellings/{dwellingId}")
+            .then()
+            .statusCode(HttpStatus.NO_CONTENT.value())
     }
 
     @Test
     fun `command failure - returns 400 Bad Request`() {
-        gateways.assumeCommandReturns<BuildDwelling>(Failure("Dwelling already built"))
+        `when`(commandGateway.send(any(), any()))
+            .thenReturn(CompletableFuture.completedFuture(CommandHandlerResult.Failure("Dwelling already built")))
 
-        Given {
-            pathParam("gameId", gameId.raw)
-            pathParam("dwellingId", dwellingId.raw)
-            header(Headers.PLAYER_ID, playerId.raw)
-            contentType(ContentType.JSON)
-            body("""
-                {
-                  "creatureId": "angel",
-                  "costPerTroop": {"gold": 3000}
-                }
-            """)
-        } When {
-            async().put("/games/{gameId}/dwellings/{dwellingId}")
-        } Then {
-            statusCode(HttpStatus.BAD_REQUEST.value())
-            contentType(ContentType.JSON)
-            body("message", equalTo("Dwelling already built"))
-        }
+        RestAssured.given()
+            .mockMvc(mockMvc)
+            .pathParam("gameId", "game-1")
+            .pathParam("dwellingId", dwellingId.raw)
+            .header("X-Player-ID", "player-1")
+            .contentType(ContentType.JSON)
+            .body("""{ "creatureId": "angel", "costPerTroop": {"gold": 3000} }""")
+            .`when`()
+            .async().put("/games/{gameId}/dwellings/{dwellingId}")
+            .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .contentType(ContentType.JSON)
+            .body("message", equalTo("Dwelling already built"))
     }
 }
 ```
 
-Key annotations and utilities:
-
-- `@RestAssuredMockMvcTest` — composes `@WebMvcTest` + RestAssured MockMvc setup
-- `@AxonGatewaysMockTest` — provides `AxonGatewaysMock` bean with mocked `CommandGateway`, `QueryGateway`, `Clock`
-- `gateways.assumeCommandReturns<T>(result)` — stubs by command type for all AF5 `CommandGateway` dispatch styles
+Key points:
+- `@WebMvcTest(ControllerClass::class)` — loads only the web layer for the specified controller
+- `@MockBean CommandGateway` — replaces the real gateway with a Mockito mock
 - `async().put(...)` / `async().post(...)` — required because controllers return `CompletableFuture`
-- Request body uses raw JSON primitives (not value objects) — mirrors HTTP client payloads
+- Request body uses raw JSON primitives (not value objects) — mirrors what the HTTP client sends
+- Stub `commandGateway.send(any(), any())` directly, or write a project helper for type-safe stubbing
 
 ### Test Scenarios Checklist
 

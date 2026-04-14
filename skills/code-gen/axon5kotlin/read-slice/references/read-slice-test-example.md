@@ -1,5 +1,8 @@
 # Read Slice Test Example: GetAllDwellingsSpringSliceTest
 
+> **Note**: This example uses the Heroes of Domain-Driven Design domain (dwellings, creatures).
+> Substitute your own bounded context names and event types when following this pattern.
+
 ## Slice Under Test
 
 `GetAllDwellings.Slice.kt` — projects `DwellingBuilt` and `AvailableCreaturesChanged` events into
@@ -22,7 +25,7 @@ data class DwellingReadModel(
 
 ### Projector Highlights
 
-- `@EventHandler fun on(event: DwellingBuilt, @MetadataValue(GameMetadata.GAME_ID_KEY) gameId: String)` — requires
+- `@EventHandler fun on(event: DwellingBuilt, @MetadataValue("tenantId") tenantId: String  // use the project's correlation key name)` — requires
   metadata
 - `@EventHandler fun on(event: AvailableCreaturesChanged)` — no metadata needed (looks up by dwellingId)
 - `@SequencingPolicy(type = MetadataSequencingPolicy::class, parameters = ["gameId"])` — events sequenced by gameId
@@ -52,7 +55,8 @@ import org.springframework.test.context.TestPropertySource
 import java.util.concurrent.TimeUnit
 
 @TestPropertySource(properties = ["slices.creaturerecruitment.read.getalldwellings.enabled=true"])
-@HeroesAxonSpringBootTest
+@AxonSpringBootTest  // org.axonframework.extension.springboot.test.AxonSpringBootTest
+             // If the project defines a meta-annotation wrapping @AxonSpringBootTest with shared config, use that instead.
 internal class GetAllDwellingsSpringSliceTest @Autowired constructor(
     private val fixture: AxonTestFixture
 ) {

@@ -20,9 +20,9 @@ Skills that generate code from prooph board Event Modeling slices for specific l
 
 | Skill | Description | Path |
 |-------|-------------|------|
-| [Axon 5 Kotlin — Write Slice](skills/code-gen/axon5kotlin/write-slice/) | Generate Kotlin write slices (Command → decide → Events → evolve → State) for Axon Framework 5 | `skills/code-gen/axon5kotlin/write-slice/` |
-| [Axon 5 Kotlin — Read Slice](skills/code-gen/axon5kotlin/read-slice/) | Generate Kotlin read slices (projection + query handler + REST + tests) for Axon Framework 5 | `skills/code-gen/axon5kotlin/read-slice/` |
-| [Axon 5 Kotlin — Automation Slice](skills/code-gen/axon5kotlin/automation-slice/) | Generate Kotlin automation slices (event → command via CommandDispatcher) for Axon Framework 5 | `skills/code-gen/axon5kotlin/automation-slice/` |
+| [Axon Framework 5 Kotlin — Write Slice](skills/code-gen/axon5kotlin/write-slice/) | Generate Kotlin write slices (Command → decide → Events → evolve → State) for Axon Framework 5 | `skills/code-gen/axon5kotlin/write-slice/` |
+| [Axon Framework 5 Kotlin — Read Slice](skills/code-gen/axon5kotlin/read-slice/) | Generate Kotlin read slices (projection + query handler + REST + tests) for Axon Framework 5 | `skills/code-gen/axon5kotlin/read-slice/` |
+| [Axon Framework 5 Kotlin — Automation Slice](skills/code-gen/axon5kotlin/automation-slice/) | Generate Kotlin automation slices (event → command via CommandDispatcher) for Axon Framework 5 | `skills/code-gen/axon5kotlin/automation-slice/` |
 
 ### Cody Engine Skills
 

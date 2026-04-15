@@ -375,6 +375,66 @@ p {
 }
 
 /* ============================================
+   News Section
+   ============================================ */
+.news-section {
+  margin-bottom: var(--spacing-xxl);
+  padding: var(--spacing-xl);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.news-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-xs);
+  font-size: 1.25rem;
+}
+
+.news-title span {
+  font-weight: 600;
+}
+
+.news-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-link);
+}
+
+.news-link:hover {
+  text-decoration: none;
+  color: var(--color-link-hover);
+}
+
+.news-date {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--spacing-md);
+}
+
+.news-content {
+  font-size: 0.9375rem;
+}
+
+.news-content h3,
+.news-content h4 {
+  font-size: 1rem;
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+}
+
+.news-content ul {
+  padding-left: 1.5em;
+  margin-bottom: var(--spacing-sm);
+}
+
+.news-content li {
+  margin-bottom: 2px;
+}
+
+/* ============================================
    Overview Page
    ============================================ */
 .overview-header {

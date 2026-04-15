@@ -54,7 +54,7 @@ function collectSkills() {
  */
 function collectTags(skills) {
   const tagMap = new Map();
-  
+
   skills.forEach(skill => {
     (skill.tags || []).forEach(tag => {
       if (!tagMap.has(tag)) {
@@ -63,8 +63,41 @@ function collectTags(skills) {
       tagMap.get(tag).push(skill);
     });
   });
-  
+
   return tagMap;
+}
+
+/**
+ * Parse CHANGELOG.md and return the latest date entry as HTML
+ */
+function getLatestChangelog() {
+  const changelogPath = path.join(ROOT, 'CHANGELOG.md');
+  if (!fs.existsSync(changelogPath)) return null;
+
+  const content = fs.readFileSync(changelogPath, 'utf-8');
+
+  // Split by ## date headers and get the first entry (after # Changelog)
+  const entries = content.split(/^## (\d{4}-\d{2}-\d{2})$/m);
+  // entries[0] = "# Changelog\n\n"
+  // entries[1] = date
+  // entries[2] = content until next date
+  if (entries.length < 3) return null;
+
+  const date = entries[1];
+  const entryContent = entries[2];
+
+  // Format the date nicely
+  const dateObj = new Date(date + 'T00:00:00Z');
+  const formattedDate = dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  // Render the entry content as HTML
+  const renderedContent = marked.parse(entryContent.trim());
+
+  return {
+    date: formattedDate,
+    rawDate: date,
+    html: renderedContent
+  };
 }
 
 /**
@@ -322,7 +355,7 @@ function generateSkillCard(skill) {
 /**
  * Generate the overview page (index.html)
  */
-function generateOverviewPage(skills, tagMap) {
+function generateOverviewPage(skills, tagMap, changelog) {
   // Group skills by category
   const categories = {};
   skills.forEach(skill => {
@@ -332,7 +365,7 @@ function generateOverviewPage(skills, tagMap) {
     }
     categories[cat].push(skill);
   });
-  
+
   const categoriesHTML = Object.entries(categories)
     .map(([category, catSkills]) => `
       <section class="category-section">
@@ -343,7 +376,7 @@ function generateOverviewPage(skills, tagMap) {
       </section>
     `)
     .join('');
-  
+
   // Generate tag cloud
   const tagsHTML = Array.from(tagMap.entries())
     .sort((a, b) => b[1].length - a[1].length)
@@ -354,24 +387,45 @@ function generateOverviewPage(skills, tagMap) {
       </a>
     `)
     .join('');
-  
+
+  // Generate news section from changelog
+  let newsHTML = '';
+  if (changelog) {
+    newsHTML = `
+    <section class="news-section">
+      <h2 class="news-title">
+        <span>News</span>
+        <a href="https://github.com/proophboard/skills/blob/main/CHANGELOG.md" class="news-link" target="_blank" rel="noopener">
+          Older news &rsaquo;
+        </a>
+      </h2>
+      <div class="news-date">${changelog.date}</div>
+      <div class="news-content markdown-body">
+        ${changelog.html}
+      </div>
+    </section>
+    `;
+  }
+
   const content = `
+    ${newsHTML}
+
     <section class="overview-header">
       <h1>Browse Skills</h1>
       <p class="overview-subtitle">A collection of AI agent skills for prooph board</p>
       <div class="skill-count">${skills.length} skills available</div>
     </section>
-    
+
     <section class="tag-cloud-section">
       <h2>Browse by Tags</h2>
       <div class="tag-cloud">
         ${tagsHTML}
       </div>
     </section>
-    
+
     ${categoriesHTML}
   `;
-  
+
   return generateHTML('Browse Skills', content);
 }
 
@@ -591,7 +645,8 @@ async function build() {
   console.log('Downloaded favicon');
   
   // Generate overview page
-  const overviewHTML = generateOverviewPage(skills, tagMap);
+  const changelog = getLatestChangelog();
+  const overviewHTML = generateOverviewPage(skills, tagMap, changelog);
   await fs.writeFile(path.join(DIST_DIR, 'index.html'), overviewHTML);
   console.log('Generated index.html');
   

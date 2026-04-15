@@ -18,6 +18,8 @@ Skills for creating and working with event models on prooph board.
 
 Skills that generate code from prooph board Event Modeling slices for specific languages and frameworks.
 
+The Axon Framework 5 Kotlin skills target **Axon Framework 5.1.0-RC2**.
+
 | Skill | Description | Path |
 |-------|-------------|------|
 | [Axon Framework 5 Kotlin — Write Slice](skills/code-gen/axon5kotlin/write-slice/) | Generate Kotlin write slices (Command → decide → Events → evolve → State) for Axon Framework 5 | `skills/code-gen/axon5kotlin/write-slice/` |

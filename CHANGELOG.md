@@ -23,6 +23,7 @@
 - Removed detailed ASCII mockup patterns (moved to `ascii-mockups` skill)
 - Removed Given-When-Then scenario patterns (moved to `slice-scenarios` skill)
 - Added **Element Descriptions** section linking to the three dedicated skills for richer documentation patterns
+- Simplified and sharpened the skill
 
 #### All Skills
 

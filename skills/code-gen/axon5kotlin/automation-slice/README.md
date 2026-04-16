@@ -28,8 +28,6 @@ Automations represent the **orange stripe** in Event Modeling — automated acto
 |---|---|
 | Implementing a new automation/event-to-command reactor in an AF5 project | Implementing command handlers (use write-slice instead) |
 | Migrating/porting automations from Axon Framework 4 (Java or Kotlin) to AF5 | Building read models for queries (use read-slice instead) |
-| User provides Event Modeling artifacts or GWT scenarios for an automation | Creating aggregate command handlers |
-| User says "implement", "create", "add", "migrate" an automation in AF5/VSA | External API integrations without event triggers |
 
 ## Usage
 

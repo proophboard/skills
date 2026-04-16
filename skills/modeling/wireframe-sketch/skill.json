@@ -1,0 +1,11 @@
+{
+  "name": "wireframe-sketch",
+  "version": "1.0.0",
+  "description": "Wireframe sketch Skill - Generate hand-drawn style SVG wireframes with sketchy aesthetics. Includes validation rules to prevent layout overlap and ensure proper element spacing.",
+  "category": "modeling",
+  "dependencies": ["proophboard-mcp"],
+  "elementTypes": ["ui"],
+  "tags": ["modeling", "documentation", "ui", "wireframes", "sketch", "best-practices"],
+  "authors": ["prooph software GmbH"],
+  "license": "MIT"
+}

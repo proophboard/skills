@@ -472,6 +472,24 @@ p {
   text-transform: capitalize;
 }
 
+/* Subcategory Section */
+.subcategory-section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.subcategory-section:last-child {
+  margin-bottom: 0;
+}
+
+.subcategory-title {
+  color: var(--color-text-secondary);
+  font-size: 1.25rem;
+  padding-bottom: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-border);
+  text-transform: capitalize;
+}
+
 /* Skill Grid */
 .skill-grid {
   display: grid;

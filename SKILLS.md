@@ -14,6 +14,18 @@ Skills for creating and working with event models on prooph board.
 | [Element Description](skills/modeling/element-description/) | Writing effective local element descriptions | `skills/modeling/element-description/` |
 | [Slice Scenarios](skills/modeling/slice-scenarios/) | Given-When-Then scenario documentation for slices | `skills/modeling/slice-scenarios/` |
 
+### Code Generation Skills
+
+Skills that generate code from prooph board Event Modeling slices for specific languages and frameworks.
+
+The Axon Framework 5 Kotlin skills target **Axon Framework 5.1.0-RC2**.
+
+| Skill | Description | Path |
+|-------|-------------|------|
+| [Axon Framework 5 Kotlin — Write Slice](skills/code-gen/axon5kotlin/write-slice/) | Generate Kotlin write slices (Command → decide → Events → evolve → State) for Axon Framework 5 | `skills/code-gen/axon5kotlin/write-slice/` |
+| [Axon Framework 5 Kotlin — Read Slice](skills/code-gen/axon5kotlin/read-slice/) | Generate Kotlin read slices (projection + query handler + REST + tests) for Axon Framework 5 | `skills/code-gen/axon5kotlin/read-slice/` |
+| [Axon Framework 5 Kotlin — Automation Slice](skills/code-gen/axon5kotlin/automation-slice/) | Generate Kotlin automation slices (event → command via CommandDispatcher) for Axon Framework 5 | `skills/code-gen/axon5kotlin/automation-slice/` |
+
 ### Cody Engine Skills
 
 Skills specifically designed for working with the [Cody Engine](https://github.com/proophboard/cody-engine) in combination with prooph board.

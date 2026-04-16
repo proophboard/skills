@@ -1,0 +1,11 @@
+{
+  "name": "axon5kotlin-automation-slice",
+  "version": "1.0.0",
+  "description": "Axon Framework 5 Kotlin Automation Slice Skill — generate Kotlin automation slices (Event → CommandDispatcher) from prooph board Event Modeling slices. Covers stateless and read-model-backed automations, CommandDispatcher usage, SequencingPolicy, and Spring Boot integration tests with AxonTestFixture.",
+  "category": "code-gen",
+  "tags": ["event-sourcing", "axon5", "kotlin", "code-gen", "automation"],
+  "dependencies": ["proophboard-mcp"],
+  "elementTypes": ["event", "command"],
+  "authors": ["Mateusz Nowak"],
+  "license": "MIT"
+}

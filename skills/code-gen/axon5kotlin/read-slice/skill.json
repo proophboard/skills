@@ -1,0 +1,11 @@
+{
+  "name": "axon5kotlin-read-slice",
+  "version": "1.0.0",
+  "description": "Axon Framework 5 Kotlin Read Slice Skill — generate Kotlin read slices (Events → Projection → JPA ReadModel → QueryHandler → REST API) from prooph board Event Modeling slices. Covers Spring Boot integration tests with AxonTestFixture, RestAssured REST API tests, JPA projections, and Given-When-Then scenario mapping.",
+  "category": "code-gen",
+  "tags": ["event-sourcing", "axon5", "kotlin", "code-gen", "information"],
+  "dependencies": ["proophboard-mcp"],
+  "elementTypes": ["event", "information"],
+  "authors": ["Mateusz Nowak"],
+  "license": "MIT"
+}

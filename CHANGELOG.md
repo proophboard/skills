@@ -1,5 +1,36 @@
 # Changelog
 
+## 2026-04-16
+
+### New Skills
+
+#### Skill: axon5kotlin-write-slice v1.0.0
+
+- New skill for generating Kotlin write slices (Command → decide → Events → evolve → State) from prooph board Event Modeling slices
+- Covers Spring Boot and Explicit Registration patterns, single-tag and multi-tag DCB, value objects, feature flags, and Given-When-Then tests with AxonTestFixture
+- Supports migrating Axon Framework 4 aggregates to Axon Framework 5
+- Author: Mateusz Nowak
+
+#### Skill: axon5kotlin-read-slice v1.0.0
+
+- New skill for generating Kotlin read slices (Events → Projection → JPA ReadModel → QueryHandler → REST API) from prooph board Event Modeling slices
+- Covers Spring Boot integration tests with AxonTestFixture, RestAssured REST API tests, JPA projections, and Given-When-Then scenario mapping
+- Author: Mateusz Nowak
+
+#### Skill: axon5kotlin-automation-slice v1.0.0
+
+- New skill for generating Kotlin automation slices (Event → CommandDispatcher) from prooph board Event Modeling slices
+- Covers stateless and read-model-backed automations, CommandDispatcher usage, SequencingPolicy, and Spring Boot integration tests with AxonTestFixture
+- Author: Mateusz Nowak
+
+#### Skill: wireframe-sketch v1.0.0
+
+- New skill for creating hand-drawn style SVG wireframes with sketchy aesthetics
+- Generates professional-looking wireframes that render inline in the browser
+- Includes validation rules to prevent layout overlap and ensure proper element spacing
+- Higher token cost than ASCII mockups but better suited for non-technical stakeholders
+- Author: prooph software GmbH
+
 ## 2026-04-13
 
 ### New Skills

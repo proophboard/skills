@@ -3,234 +3,44 @@ name: event-modeling
 description: "Event Modeling Skill - Core guidelines for creating Event Models on prooph board. Covers event-first modeling strategy, command eligibility tests, element types, lane and slice structure, anti-patterns, and self-validation. Use this skill to understand the rules of Event Modeling on prooph board."
 ---
 
-# Event Modeling Guidelines for AI Agents
+# Event Modeling — Guidelines
 
 These guidelines describe how to create Event Models on a prooph board.
 
 Event Modeling visualizes **business information flow and domain state changes** inside a system.
 
-It is NOT used to model:
+You are a **Software Architect and Domain Modeler**.
 
-- UI interaction flows
-- request/response cycles
-- technical implementation details
-- API calls
-- internal processing steps
+Your responsibility is to model business processes using Event Modeling with a strong focus on:
 
-Event models describe **business processes and outcomes**.
+- domain correctness
+- clear causality
+- business language (not technical language)
 
----
-
-# Modeling Role
-
-Your role is **Software System Architect and Domain Modeler**, not a UI developer.
-
-You are responsible for modeling:
-
-- business processes
-- domain state changes
-- business events
-- information flow through the system
-- interactions between users, automations, and the system
-
-You must think like:
-
-- a system architect
-- a domain expert
-- a business analyst
-
-The model must be understandable to **business stakeholders**.
-
-Avoid technical implementation details in the visual model.
+You think in terms of real-world behavior before software.
 
 ---
 
-# Discovery First – Do Not Model Too Early
+# Modes
 
-Before creating elements you must **understand the problem domain**.
+## Modeling Mode
 
-Your first responsibility is to identify:
+Use this mode to create or extend an Event Model.
 
-- missing requirements
-- unclear terminology
-- ambiguous business rules
-- hidden assumptions
-- edge cases
+- Focus on exploration and structure
+- Do not over-correct early
+- Capture the process as completely as possible
 
-If information is missing:
+## Critic Mode
 
-DO NOT guess.
+Use this mode to review an existing model.
 
-Instead:
+- Apply all rules strictly
+- Identify violations, gaps, and inconsistencies
+- Suggest concrete improvements
+- Create Hotspots where assumptions were made
 
-- ask clarifying questions
-- create Hot Spots
-- highlight uncertainty
-
-Prefer:
-
-Hot Spot + Question
-
-over
-
-inventing commands, events, or system behavior.
-
----
-
-# Event Storming Mode for AI
-
-When starting a new modeling session you should begin in **Event Storming Mode**.
-
-Event Storming Mode focuses on discovering the domain before building the flow.
-
-Steps:
-
-1. Identify **important business events**
-2. Identify **core domain entities**
-3. Identify **actors (users or automations)**
-4. Identify **major state transitions**
-5. Identify **uncertainties or missing knowledge**
-
-During Event Storming Mode:
-
-- events can temporarily exist without commands
-- focus on discovering **what happens in the business**
-
-Example events:
-
-- Order Placed
-- Payment Authorized
-- Invoice Sent
-- Subscription Cancelled
-
-After important events are discovered, switch to **Event Modeling Mode**.
-
----
-
-# Event-First Modeling Strategy
-
-When building the model, always start with **business events**.
-
-Events represent the **outcomes that matter in the domain**.
-
-Process:
-
-1. Identify the business event
-2. Identify the command that causes the event
-3. Identify information that becomes available
-4. Identify UI or automation interaction
-
-The causal chain is:
-
-Command → Event → Information
-
----
-
-# Persistent State Change Rule
-
-Command → Event flows are only allowed when **persistent system state changes**.
-
-Persistent state includes:
-
-- database records
-- domain aggregates
-- stored business data
-- durable system state
-
-If executing a command does NOT modify persistent state, it is NOT a command.
-
-Instead model the step as **Information**.
-
-Example:
-
-Incorrect:
-
-Command: Load Orders
-Event: Orders Loaded
-
-Correct:
-
-Information: Orders
-
----
-
-# Command Eligibility Tests
-
-Before creating a Command you MUST verify that it passes all tests.
-
-## Test 1 — Persistent State Change
-
-Does the action modify persistent system state?
-
-If NO → it is not a command.
-
-Examples that fail:
-
-- Load Orders
-- Refresh Dashboard
-- Show Details
-
----
-
-## Test 2 — Business Meaning
-
-Would a business stakeholder care that this happened?
-
-If not → it is not a valid event.
-
-Invalid examples:
-
-- API Called
-- Request Sent
-- Data Loaded
-
----
-
-## Test 3 — Auditability
-
-Could this event appear in a business audit log?
-
-Valid examples:
-
-- Order Placed
-- Payment Authorized
-- Subscription Cancelled
-
-Invalid examples:
-
-- Dialog Opened
-- Page Loaded
-
----
-
-## Test 4 — Domain Language
-
-Commands must be expressed in domain language.
-
-Good:
-
-Register User
-Place Order
-
-Bad:
-
-Execute Query
-Post Request
-
----
-
-# Mental Model
-
-Each step follows this structure:
-
-User or automation decides something
-→ sends a **Command**
-→ system records an **Event**
-→ new **Information** becomes available (next read slice)
-
-Commands express **intent**.
-Events record **facts**.
-Information represents **system state that can be read**. (next read slice)
+Do NOT mix both modes.
 
 ---
 
@@ -328,6 +138,13 @@ The automation reads information from the system and triggers commands in subseq
 ---
 
 # Elements
+
+## Structure
+
+Each element has a name.
+Also write a short description of 2-3 sentences or bullet points.
+
+DO NOT WRITE TO ELEMENT DETAILS. Details are reserved for deep modeling. This skill is about exploration.
 
 ## Command
 
@@ -447,6 +264,8 @@ Used to highlight:
 
 Hot Spots should contain questions and explanations.
 
+DO NOT WRITE INTO HOT SPOT DETAILS! Always use the element description so that all people can view the questions/concerns.
+
 ---
 
 # Anti-Patterns (DO NOT MODEL)
@@ -498,137 +317,149 @@ If the event is unclear, do not model the step yet.
 
 ---
 
-# Modeling Reasoning Loop
+# Lane Naming
 
-For each step:
+Default lane names MUST be replaced with domain-specific names.
 
-Identify event
-↓
-Identify command
-↓
-Identify information
-↓
-Identify UI/automation
+Rules:
 
-If you cannot clearly identify the event, pause modeling.
+- Rename **User Role lane** → actual actor
+- Rename **System Context lane** → bounded context or system name
+- **Information Flow lane MUST NOT be renamed**
 
 ---
 
-# When to Use Hot Spots
+# Flow & Causality
 
-Add Hot Spots when:
+Model causality, not strict sequence.
 
-- requirements are unclear
-- multiple interpretations exist
-- domain rules are missing
-- assumptions would be required
+Rules:
 
-Hot Spots should contain:
+- A process MUST start with a **READ** or **AUTOMATION** slice
+- Every **WRITE slice MUST have a clear trigger**
+- A WRITE slice MUST NOT follow another WRITE without a trigger
 
-- explanation
-- question
-- possible interpretations
+Valid flows:
 
----
+- READ → WRITE
+- WRITE → READ
+- WRITE → AUTOMATION
+- AUTOMATION → WRITE
+- AUTOMATION → READ
 
-# Practical Modeling Steps
+Every command must be traceable to:
 
-1. Create chapter
-2. Create lanes
-3. Create slices
-4. Discover events
-5. Add commands
-6. Add information
-7. Add UI or automations
+- a user decision (READ), or
+- a system reaction (AUTOMATION)
 
 ---
 
-# Self Validation Checklist
+# READ Slice Rules
 
-Before creating a Command → Event pair ask:
+Every READ slice MUST include:
 
-1. Does persistent system state change?
-2. Is the event a meaningful business fact?
-3. Would the event appear in a business timeline?
-4. Does it pass the Command Eligibility Tests?
-
-If any answer is NO, do not create the command.
+1. At least one **Information**
+2. At least one **UI or Automation consumer**
 
 ---
 
-# Element Descriptions
+# Data Origin
 
-Elements can have local descriptions to document context-specific information. Use these dedicated skills for detailed patterns:
+Before the first WRITE:
 
-- **example-data** — Adding concrete YAML example data to Command, Event, and Information elements
-- **ascii-mockups** — Creating ASCII mockups for UI element descriptions
-- **slice-scenarios** — Writing Given-When-Then scenarios in slice details
+- Required data must exist
+- The actor must be able to access it
+
+Otherwise, model a READ first.
 
 ---
 
-# Model Critic Loop
+# Domain Language
 
-During modeling you must periodically stop and review the model critically.
+Commands and events MUST use domain language.
 
-Switch from **Builder Mode** to **Critic Mode** and inspect the model.
+## Button Label Test
 
-Run a critic review:
+UI wording → ❌  
+Business intent → ✅
 
-- after completing a slice
-- after adding several elements
-- before finishing a modeling session
+## Stakeholder Test
 
-## Critic Review Checklist
+Would a business stakeholder say this?
 
-When reviewing the model ask:
+- Commands → intent
+- Events → outcome
 
-### Event Validity
-- Do all events represent real business facts?
-- Are there technical or UI events that should not exist?
+---
 
-### Command Validity
-- Does each command change persistent system state?
-- Does each command pass the Command Eligibility Tests?
+# Slice Naming
 
-### Slice Structure
-- Does each write slice contain exactly one command and at least one event?
-- Does each read slice contain exactly one information and one UI element?
-- Does each automation slice contain information (optional) and one automation element?
-- Are events correctly placed in write slices only?
-- Are automation slices free of events?
-- Are read slices free of commands, events, and automation?
+Slice labels describe the scenario.
 
-### Query Modeling
-- Are queries incorrectly modeled as commands?
+- Use domain language
+- Distinguish outcomes when needed
 
-### Domain Clarity
-- Are there missing business rules?
-- Are assumptions being made?
+---
 
-### Model Completeness
-- Are important events missing?
-- Are failure scenarios considered?
+# Offline-First Thinking
 
-### Information Flow
-- Does information logically follow from events?
+Model the process without software first.
 
-If any issue is detected:
+Ask:
 
-- add a Hot Spot
-- ask a domain question
-- correct the model structure
+- How would this work manually?
+- Who acts?
+- What triggers actions?
+- What information is used?
 
-# Final Reminder
+Rules:
 
-Event models describe **business information flow and domain state changes**.
+- Model real-world behavior first
+- Avoid technical concepts
+- Question steps that exist only because of software
 
-They do NOT describe:
+---
 
-- UI interaction flows
-- API calls
-- technical implementation
-- request/response behavior
+# Modeling Order
 
-Always focus on **business events and state transitions**.
+1. Do you have questions? Ask them!
+2. Identify actor and system
+3. Identify domain events
+4. Create lanes
+5. Create slices (causality-based)
+6. Discover Events
+7. Add elements:
+    - more Events if user answers unveiled new insights
+    - Commands
+    - Information
+    - UI / Automation
+8. Validate rules
 
-Your goal is not only to build the model, but also to challenge it and find weaknesses in it.
+---
+
+# Hotspot Discovery
+
+Stop when something is unclear during modeling:
+
+- Process completion
+- Data origin
+- Repetition
+- Concurrency
+- Time constraints
+- Abandonment
+- Error handling
+- Authorization
+
+If you assume → ask user question or create a Hotspot.
+
+---
+
+# Goal
+
+A correct model is:
+
+- Domain-driven
+- Causally consistent
+- Complete
+- Precise
+- Exploratory

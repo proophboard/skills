@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Axon Framework 5 Kotlin Write Slice Skill — generate Kotlin write slices (Command → decide → Events → evolve → State) from prooph board Event Modeling slices. Covers Spring Boot and Explicit Registration patterns, single-tag and multi-tag DCB, value objects, feature flags, and Given-When-Then tests with AxonTestFixture. Supports migrating AF4 aggregates to AF5.",
   "category": "code-gen",
+  "tags": ["event-sourcing", "axon5", "kotlin", "code-gen", "command", "event"],
   "dependencies": ["proophboard-mcp"],
   "elementTypes": ["command", "event"],
   "authors": ["Mateusz Nowak"],

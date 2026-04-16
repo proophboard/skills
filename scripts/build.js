@@ -351,6 +351,13 @@ function generateOverviewPage(skills, tagMap) {
   });
   
   const categoriesHTML = Object.entries(categories)
+    .sort(([a], [b]) => {
+      // Always put 'cody' last
+      if (a.toLowerCase() === 'cody') return 1;
+      if (b.toLowerCase() === 'cody') return -1;
+      // Otherwise sort alphabetically
+      return a.localeCompare(b);
+    })
     .map(([category, subcategories]) => {
       const hasSubcategories = Object.keys(subcategories).length > 1 || 
                                (Object.keys(subcategories).length === 1 && Object.keys(subcategories)[0] !== '_default');

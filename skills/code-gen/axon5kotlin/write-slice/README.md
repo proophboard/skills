@@ -30,8 +30,6 @@ Write slices represent the **blue stripe** in Event Modeling — commands that c
 |---|---|
 | Implementing a new write slice / command handler in an AF5 project | Building read models for queries (use read-slice instead) |
 | Migrating/porting write slices from Axon Framework 4 (Java or Kotlin) to AF5 | Implementing event handlers that dispatch commands (use automation-slice instead) |
-| User provides Event Modeling artifacts, GWT scenarios, or specifications for a command | Creating projections or query handlers |
-| User says "implement", "create", "add", "migrate" a write slice, command handler, or aggregate behavior | External API integrations without event sourcing |
 
 ## Usage
 

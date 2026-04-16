@@ -35,8 +35,6 @@ Read slices represent the **green stripe** in Event Modeling — information ele
 |---|---|
 | Implementing a new read slice / projection in an AF5 project | Implementing command handlers (use write-slice instead) |
 | Migrating/porting read slices from Axon Framework 4 to AF5 | Building event handlers that dispatch commands (use automation-slice instead) |
-| User provides Event Modeling artifacts or GWT scenarios for a read slice | Creating aggregate state (handled on write side) |
-| User says "implement", "create", "add" a read slice, projection, or query handler | External API integrations without CQRS patterns |
 
 ## Usage
 

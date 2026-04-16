@@ -34,6 +34,18 @@ function collectSkills() {
     // Resolve README relative path for assets
     const relativePath = path.relative(SKILLS_DIR, skillDir);
     
+    // Extract subcategory from directory structure
+    // Path format: skills/{category}/{subcategory?}/{skill-name}
+    const pathParts = relativePath.split(path.sep);
+    const category = skill.category || 'Other';
+    let subcategory = null;
+    
+    // If there are more than 2 parts, the middle part is the subcategory
+    // e.g., code-gen/axon5kotlin/automation-slice -> subcategory = axon5kotlin
+    if (pathParts.length > 2) {
+      subcategory = pathParts[1];
+    }
+    
     return {
       ...skill,
       readmeContent,
@@ -45,6 +57,7 @@ function collectSkills() {
       assetsDir: hasAssets ? assetsDir : null,
       // Generate URL-friendly slug
       slug: skill.name.toLowerCase(),
+      subcategory,
     };
   });
 }
@@ -323,25 +336,63 @@ function generateSkillCard(skill) {
  * Generate the overview page (index.html)
  */
 function generateOverviewPage(skills, tagMap) {
-  // Group skills by category
+  // Group skills by category and subcategory
   const categories = {};
   skills.forEach(skill => {
     const cat = skill.category || 'Other';
     if (!categories[cat]) {
-      categories[cat] = [];
+      categories[cat] = {};
     }
-    categories[cat].push(skill);
+    const subcat = skill.subcategory || '_default';
+    if (!categories[cat][subcat]) {
+      categories[cat][subcat] = [];
+    }
+    categories[cat][subcat].push(skill);
   });
   
   const categoriesHTML = Object.entries(categories)
-    .map(([category, catSkills]) => `
-      <section class="category-section">
-        <h2 class="category-title">${category.charAt(0).toUpperCase() + category.slice(1)} Skills</h2>
-        <div class="skill-grid">
-          ${catSkills.map(generateSkillCard).join('')}
-        </div>
-      </section>
-    `)
+    .map(([category, subcategories]) => {
+      const hasSubcategories = Object.keys(subcategories).length > 1 || 
+                               (Object.keys(subcategories).length === 1 && Object.keys(subcategories)[0] !== '_default');
+      
+      if (hasSubcategories) {
+        // Render with subcategory sections
+        const subcategorySections = Object.entries(subcategories)
+          .map(([subcategory, subcatSkills]) => {
+            const subcategoryTitle = subcategory === '_default' 
+              ? `${category.charAt(0).toUpperCase() + category.slice(1)} Skills`
+              : `${subcategory.charAt(0).toUpperCase() + subcategory.slice(1)}`;
+            
+            return `
+              <div class="subcategory-section">
+                <h3 class="subcategory-title">${subcategoryTitle}</h3>
+                <div class="skill-grid">
+                  ${subcatSkills.map(generateSkillCard).join('')}
+                </div>
+              </div>
+            `;
+          })
+          .join('');
+        
+        return `
+          <section class="category-section">
+            <h2 class="category-title">${category.charAt(0).toUpperCase() + category.slice(1)} Skills</h2>
+            ${subcategorySections}
+          </section>
+        `;
+      } else {
+        // No subcategories, render flat
+        const catSkills = subcategories['_default'] || [];
+        return `
+          <section class="category-section">
+            <h2 class="category-title">${category.charAt(0).toUpperCase() + category.slice(1)} Skills</h2>
+            <div class="skill-grid">
+              ${catSkills.map(generateSkillCard).join('')}
+            </div>
+          </section>
+        `;
+      }
+    })
     .join('');
   
   // Generate tag cloud

@@ -167,6 +167,12 @@ This pattern makes state transitions explicit for business understanding.
 
 ---
 
+## Slice Width
+
+When adding example data to an element, check the width of the slice the element belongs to. If the width is less than 300, use the `resize_slice` tool to set the slice width to 300 before or after updating the element description. Do it only once per slice.
+
+---
+
 ## Common Mistakes
 
 ### Too Technical

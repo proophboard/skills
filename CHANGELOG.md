@@ -4,7 +4,7 @@
 
 ### Updated Skills
 
-#### Skill: modeling/example-data v1.0.1
+#### Skill: modeling/example-data v1.1.0
 
 - Added a rule to resize the element's slice if needed
 

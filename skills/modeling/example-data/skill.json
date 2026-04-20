@@ -1,6 +1,6 @@
 {
   "name": "example-data",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Example Data Skill - Guide for adding example data to Command, Event, and Information elements in prooph board. Covers YAML examples with concrete values, showing data structures, and documenting state changes in element descriptions.",
   "category": "modeling",
   "dependencies": ["proophboard-mcp"],

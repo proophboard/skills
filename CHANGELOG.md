@@ -8,6 +8,10 @@
 
 - Added a rule to resize the element's slice if needed
 
+#### Skill modeling/event-modeling v1.3.0
+
+- Added new section: Event Reaction Slice
+
 ## 2026-04-16
 
 ### New Skills

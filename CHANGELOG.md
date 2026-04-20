@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-04-20
+
+### Updated Skills
+
+#### Skill: modeling/example-data v1.0.1
+
+- Added a rule to resize the element's slice if needed
+
 ## 2026-04-16
 
 ### New Skills

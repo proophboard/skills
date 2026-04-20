@@ -136,6 +136,27 @@ The automation reads information from the system and triggers commands in subseq
 - If an automation triggers a command that produces an event: place a Write Slice (Command → Event) AFTER the automation slice
 
 ---
+### Event Reaction Slice
+
+Contains:
+
+Event → Automation
+
+Rules:
+
+- one or more events in System Context lane
+- one automation in User Role lane
+- commands are NOT allowed
+- information is NOT allowed
+- UI is NOT allowed
+
+An Event Reaction Slice models the pattern where an event directly triggers an automation in the same slice. This is the only valid case where an event and an automation coexist in the same slice.
+
+**Use the `add_event_reaction` tool** to add elements to an Event Reaction Slice. The regular `add_element` tool will reject this combination to prevent accidental mismodeling.
+
+Example: `Order Placed` (event) → `Fraud Detection Service` (automation)
+
+---
 
 # Elements
 

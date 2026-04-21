@@ -47,6 +47,14 @@ This skill teaches AI agents how to generate valid SVG wireframes with proper la
 
 Once installed, your AI agent will know how to generate SVG wireframes for UI elements. The wireframes are created on-the-fly during event modeling sessions and uploaded directly to UI elements — no files saved to disk.
 
+### Examples
+
+![Time Tracking Dashboard](_assets/wireframes_tiem_tracking_dashboard.png)
+
+![Record Time Entry](_assets/wireframes_record_time_entry.png)
+
+![UI Elements with wireframes on prooph board](_assets/wireframes_pb_ui_with_wireframes.png)
+
 ### Example Output
 
 A wireframe includes:

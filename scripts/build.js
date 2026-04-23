@@ -275,6 +275,22 @@ function generateHTML(title, content, extraHead = '', bodyClass = '') {
       document.getElementById('tab-' + tabName).classList.add('active');
     }
 
+    function copyGitHubUrl(url) {
+      navigator.clipboard.writeText(url).then(function() {
+        var btn = event.target.closest('.copy-url-button');
+        var originalText = btn.innerHTML;
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M13.854 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L6.5 10.293l6.646-6.647a.5.5 0 01.708 0z"/></svg> Copied!';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.innerHTML = originalText;
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(function(err) {
+        console.error('Failed to copy URL:', err);
+        alert('Failed to copy URL to clipboard');
+      });
+    }
+
     (function() {
       var overlay = document.getElementById('image-overlay');
       var overlayImg = document.getElementById('overlay-image');
@@ -457,6 +473,9 @@ function generateSkillPage(skill, zipUrl = null) {
   // Download button links to the zip file
   const downloadUrl = zipUrl || `https://github.com/proophboard/skills/tree/main/skills/${skill.relativePath}`;
 
+  // GitHub folder URL for copy button
+  const githubUrl = `https://github.com/proophboard/skills/tree/main/skills/${skill.relativePath}`;
+
   const content = `
     <article class="skill-detail">
       <header class="skill-detail-header">
@@ -465,12 +484,21 @@ function generateSkillPage(skill, zipUrl = null) {
             <h1 class="skill-detail-name">${skill.name}</h1>
             <span class="skill-detail-version">v${skill.version}</span>
           </div>
-          <a href="${downloadUrl}" class="download-button" target="_blank">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M8 10.5l-4-4h2.5V2h3v4.5H12l-4 4zM3 12h10v2H3v-2z"/>
-            </svg>
-            Download Skill
-          </a>
+          <div class="skill-actions">
+            <a href="${downloadUrl}" class="download-button" target="_blank">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 10.5l-4-4h2.5V2h3v4.5H12l-4 4zM3 12h10v2H3v-2z"/>
+              </svg>
+              Download Skill
+            </a>
+            <button class="copy-url-button" onclick="copyGitHubUrl('${githubUrl}')" title="Copy GitHub URL for AI agent installation">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M4 1.5H3a2 2 0 00-2 2V14a2 2 0 002 2h10a2 2 0 002-2V3.5a2 2 0 00-2-2h-1v1h1a1 1 0 011 1V14a1 1 0 01-1 1H3a1 1 0 01-1-1V3.5a1 1 0 011-1h1v-1z"/>
+                <path d="M9.5 1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-3a.5.5 0 01-.5-.5v-1a.5.5 0 01.5-.5h3zm-3-1A1.5 1.5 0 005 1.5v1A1.5 1.5 0 006.5 4h3A1.5 1.5 0 0011 2.5v-1A1.5 1.5 0 009.5 0h-3z"/>
+              </svg>
+              Skill URL
+            </button>
+          </div>
         </div>
         <p class="skill-detail-description">${skill.description}</p>
       </header>

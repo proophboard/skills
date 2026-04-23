@@ -612,6 +612,12 @@ p {
   font-family: var(--font-mono);
 }
 
+.skill-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
 .download-button {
   display: inline-flex;
   align-items: center;
@@ -623,6 +629,8 @@ p {
   font-weight: 600;
   white-space: nowrap;
   transition: opacity var(--transition), transform var(--transition);
+  border: none;
+  text-decoration: none;
 }
 
 .download-button:hover {
@@ -633,6 +641,38 @@ p {
 }
 
 .download-button svg {
+  flex-shrink: 0;
+}
+
+.copy-url-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  background: var(--color-bg);
+  color: var(--color-accent);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font-family);
+  font-size: 1rem;
+}
+
+.copy-url-button:hover {
+  background: var(--color-accent-light);
+  transform: translateY(-1px);
+}
+
+.copy-url-button.copied {
+  background: var(--color-accent);
+  color: #ffffff;
+  border-color: var(--color-accent);
+}
+
+.copy-url-button svg {
   flex-shrink: 0;
 }
 
@@ -1049,7 +1089,13 @@ p {
     align-items: flex-start;
   }
 
-  .download-button {
+  .skill-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .download-button,
+  .copy-url-button {
     width: 100%;
     justify-content: center;
   }

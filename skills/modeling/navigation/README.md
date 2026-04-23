@@ -73,18 +73,12 @@ Agent:
 
 ### Generating Deeplinks
 
-When providing feedback on multiple elements:
-```
-Found 3 modeling issues:
+You can get a deeplink by right-clicking on an element or slice on prooph board and choose
+**Copy Link** from the context menu. This will copy the deeplink into clipboard and you can
+paste it into your agent chat.
 
-1. Missing schema on "Update Profile" command:
-   https://flow.prooph-board.com/link/ws123/ch456/element/cmd001
+Prompts like:
 
-2. Incomplete scenario on checkout slice:
-   https://flow.prooph-board.com/link/ws123/ch456/slice/slc002
+> Please focus on element: [deeplink]
 
-3. Event naming doesn't follow past tense:
-   https://flow.prooph-board.com/link/ws123/ch456/element/evt003
-```
-
-![Navigation Example](_assets/navigation.png)
+followed by specific instructions or questions should be enough to activate the skill. 

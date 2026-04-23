@@ -1,0 +1,11 @@
+{
+  "name": "navigation",
+  "version": "1.0.0",
+  "description": "Navigation Skill - Parse deeplinks, retrieve chapter data via MCP, focus on referenced elements or slices, and generate deeplinks for precise user navigation.",
+  "category": "modeling",
+  "dependencies": ["proophboard-mcp"],
+  "elementTypes": ["command", "event", "information", "ui", "role", "policy"],
+  "tags": ["modeling", "navigation", "deeplinks"],
+  "authors": ["prooph software GmbH"],
+  "license": "MIT"
+}

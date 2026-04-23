@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-04-23
+
+### New Skills
+
+#### Skill: navigation v1.0.0
+
+- New skill for parsing and generating deeplinks for prooph board
+- Teaches agents to extract identifiers from deeplinks and retrieve chapter data via MCP tools
+- Focuses responses on specific elements or slices referenced in deeplinks
+- Generates precise navigation links when referencing modeling issues or elements
+- Author: prooph software GmbH
+
 ## 2026-04-20
 
 ### Updated Skills

@@ -13,6 +13,7 @@ Skills for creating and working with event models on prooph board.
 | [Event Modeling](skills/modeling/event-modeling/) | Core event modeling guidelines and best practices | `skills/modeling/event-modeling/` |
 | [Element Description](skills/modeling/element-description/) | Writing effective local element descriptions | `skills/modeling/element-description/` |
 | [Slice Scenarios](skills/modeling/slice-scenarios/) | Given-When-Then scenario documentation for slices | `skills/modeling/slice-scenarios/` |
+| [Navigation](skills/modeling/navigation/) | Parse deeplinks, retrieve chapter data, and generate navigation links | `skills/modeling/navigation/` |
 
 ### Code Generation Skills
 

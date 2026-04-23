@@ -81,4 +81,6 @@ Prompts like:
 
 > Please focus on element: [deeplink]
 
-followed by specific instructions or questions should be enough to activate the skill. 
+followed by specific instructions or questions should be enough to activate the skill.
+
+![Focus on element](_assets/navigation_skill.png)

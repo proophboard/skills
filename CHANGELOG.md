@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-04-28
+
+### Updated Skills
+
+#### modeling/event-modeling v1.4.0
+
+- Added rules for multiple consecutive slices
+  - Event -> multiple read slices
+  - UI/Automation -> multiple write slices
+  - Command -> multiple Events
+
 ## 2026-04-23
 
 ### New Skills

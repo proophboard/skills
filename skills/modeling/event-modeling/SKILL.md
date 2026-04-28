@@ -136,6 +136,7 @@ The automation reads information from the system and triggers commands in subseq
 - If an automation triggers a command that produces an event: place a Write Slice (Command → Event) AFTER the automation slice
 
 ---
+
 ### Event Reaction Slice
 
 Contains:
@@ -380,9 +381,88 @@ Every command must be traceable to:
 Every READ slice MUST include:
 
 1. At least one **Information**
-2. At least one **UI or Automation consumer**
+
+## Event → Multiple Consecutive Read Slices
+
+An event in a Write Slice connects to the Information element in the **next** slice.
+
+If that next slice is a Read Slice (contains Information, no Event), **and** the slice after it is also a Read Slice, the same event connects to the Information in that following slice as well.
+
+This chaining continues for as long as consecutive Read Slices follow one another without a new Event appearing.
+
+The chain **stops** when:
+
+- a slice contains an Event, or
+- a slice contains no Information
+
+**Example:**
+
+```
+Slice 1 (Write):  Order Placed (event)
+Slice 2 (Read):   Order List (information)      ← event connects here
+Slice 3 (Read):   Order Detail (information)    ← event also connects here
+Slice 4 (Read):   Order Summary (information)   ← event also connects here
+Slice 5 (Write):  Update Order (command) → Order Updated (event)  ← chain stops
+```
+
+**Modeling rule:** When a single event is the data source for multiple independent read views, place each view in its own Read Slice immediately after the Write Slice. Do not introduce a new event just to bridge read slices.
 
 ---
+
+# Write Slice Rules
+
+## Command → Multiple Consecutive Event-Only Slices
+
+A Command connects to the Event in the same Write Slice.
+
+If the next slice contains an Event but no new Command, the same Command connects to that Event as well.
+
+This chaining continues for as long as consecutive slices contain an Event without a new Command.
+
+The chain **stops** when:
+
+- a slice contains a Command, or
+- a slice contains no Event
+
+**Example:**
+
+```
+Slice 1 (Write):  Place Order (command) → Order Placed (event)    ← command connects here
+Slice 2:          Stock Reserved (event)                          ← command also connects here
+Slice 3:          Payment Charged (event)                         ← command also connects here
+Slice 4 (Write):  Ship Order (command) → Order Shipped (event)    ← chain stops
+```
+
+**Modeling rule:** When a single command produces multiple domain events as side effects, place each event in its own slice without adding a new Command. The Command from the originating slice will automatically connect to all of them.
+
+---
+
+## UI/Automation → Multiple Consecutive Write Slices
+
+A UI or Automation connects to the Command in the same slice (or the next slice if the current slice has no Command).
+
+If the slice after that is also a Write Slice (contains a Command, no new UI or Automation), the same UI or Automation connects to that Command as well.
+
+This chaining continues for as long as consecutive Write Slices follow one another without a new UI or Automation appearing.
+
+The chain **stops** when:
+
+- a slice contains a UI or Automation, or
+- a slice contains no Command
+
+**Example:**
+
+```
+Slice 1 (Write):  User Action (ui) → Place Order (command)          ← ui connects here
+Slice 2 (Write):  Reserve Stock (command)                           ← ui also connects here
+Slice 3 (Write):  Charge Payment (command)                          ← ui also connects here
+Slice 4 (Write):  Confirm Screen (ui) → Send Confirmation (command) ← chain stops
+```
+
+**Modeling rule:** When a single user action triggers a sequence of commands with no intermediate user interaction, place each command in its own Write Slice without adding a new UI element. The UI from the originating slice will automatically connect to all of them.
+
+---
+
 
 # Data Origin
 
@@ -450,10 +530,10 @@ Rules:
 5. Create slices (causality-based)
 6. Discover Events
 7. Add elements:
-    - more Events if user answers unveiled new insights
-    - Commands
-    - Information
-    - UI / Automation
+   - more Events if user answers unveiled new insights
+   - Commands
+   - Information
+   - UI / Automation
 8. Validate rules
 
 ---

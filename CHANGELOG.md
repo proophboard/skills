@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-06-05
+
+### Updated Skills
+
+#### modeling/example-data v1.2.0
+
+- updated slice resize instruction to take new cell padding into account when resizing
+
 ## 2026-04-28
 
 ### Updated Skills

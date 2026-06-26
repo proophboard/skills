@@ -1,0 +1,77 @@
+artifacts:
+
+  animal-registration-form:
+    name: Animal Registration Form
+
+    description: >
+      Form used to officially register an arriving animal.
+
+    auto_reveal: guided
+
+    fields:
+      intake_date_time:
+        required: true
+
+      intake_reason:
+        required: true
+
+      brought_by:
+        required: false
+
+      finder_contact_information:
+        required: false
+
+      animal_type:
+        required: true
+
+      species:
+        required: true
+
+      breed:
+        required: false
+
+      sex:
+        required: false
+
+      estimated_age:
+        required: false
+
+      color_markings:
+        required: true
+
+      microchip_present:
+        required: true
+
+      microchip_number:
+        required: false
+
+      visible_injuries:
+        required: false
+
+      immediate_concerns:
+        required: false
+
+  intake-checklist:
+    name: Intake Checklist
+
+    description: >
+      Operational checklist used during intake.
+
+    steps:
+      - Check for microchip
+      - Capture arrival details
+      - Register animal
+      - Assign temporary identifier
+      - Prepare kennel
+      - Notify animal care staff
+
+  occupancy-board:
+    name: Occupancy Board
+
+    description: >
+      Board showing kennel availability.
+
+    information:
+      - kennel_identifier
+      - occupancy_status
+      - special_requirements

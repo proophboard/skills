@@ -1,0 +1,137 @@
+flows:
+  - slice: Animal Intake
+
+  - type: write
+
+    ui:
+      name: Animal Registration Form
+
+    command:
+      name: Register Animal Intake
+
+    event:
+      name: Animal Arrived At Shelter
+
+  - slice: Kennel Assignment View
+
+  - type: read
+
+    event:
+      name: Animal Arrived At Shelter
+
+    information:
+      name: Occupancy Board
+
+    ui:
+      name: Occupancy Board
+
+  - slice: Kennel Assignment
+
+  - type: write
+
+    ui:
+      name: Kennel Assignment View
+
+    command:
+      name: Assign Kennel
+
+    event:
+      name: Animal Assigned To Kennel
+
+  - slice: Kennel Preparation
+
+  - type: read
+
+    event:
+      name: Animal Assigned To Kennel
+
+    information:
+      name: Occupancy Board
+
+    ui:
+      name: Kennel Preparation View
+
+artifacts:
+
+  Animal Registration Form:
+    description: >
+      Information captured when an animal is accepted into the shelter's care.
+
+    required_fields:
+      - Temporary Intake ID
+      - Intake Date and Time
+      - Species
+      - Intake Reason
+      - Found Location
+      - Intake Staff Member
+
+    optional_fields:
+      - Animal Name
+      - Breed
+      - Estimated Age
+      - Sex
+      - Color and Distinguishing Marks
+      - Finder Name
+      - Finder Contact Information
+      - Collar / Tags Present
+      - Microchip Number
+      - Medical Concerns Observed
+      - Behavioral Observations
+      - Additional Notes
+
+    unknown_at_intake:
+      - Medical History
+      - Vaccination Status
+      - Owner Identity
+      - Behavioral Background
+      - Adoption Eligibility
+
+  Occupancy Board:
+    description: >
+      Provides an overview of current shelter occupancy and available kennels.
+
+    information_shown:
+      - Kennel Identifier
+      - Occupancy Status
+      - Species Compatibility
+      - Isolation Availability
+      - Notes
+
+actors:
+
+  receptionist:
+    responsibilities:
+      - capture_intake_information
+      - register_arrival
+
+  animal-care-staff:
+    responsibilities:
+      - review_occupancy
+      - assign_kennel
+      - prepare_kennel
+
+discoveries:
+
+  commands:
+    - Register Animal Intake
+    - Assign Kennel
+
+  events:
+    - Animal Arrived At Shelter
+    - Animal Assigned To Kennel
+
+  information:
+    - Animal Registration Form
+    - Occupancy Board
+
+  ui:
+    - Animal Registration Form
+    - Occupancy Board
+    - Kennel Assignment View
+    - Kennel Preparation View
+
+hot_spots:
+  - Shelter capacity exhausted
+  - No suitable kennel available
+  - Animal requires isolation
+  - Ownership identified after intake

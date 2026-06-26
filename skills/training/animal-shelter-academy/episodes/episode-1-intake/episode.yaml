@@ -1,0 +1,56 @@
+id: episode-1-intake
+
+title: New Arrival
+
+story_episode: Episode 1 - New Arrival
+
+summary: >
+  A stray dog arrives at the shelter.
+  No microchip is found.
+  No owner information is available.
+  Learners investigate how an animal intake actually works.
+
+starting_event:
+  - Animal Arrived At Shelter
+
+available_actors:
+  - sarah-thompson
+
+available_artifacts:
+  - animal-registration-form
+  - intake-checklist
+  - occupancy-board
+
+learning_goals:
+  - identify events
+  - identify commands
+  - identify user interfaces
+  - identify supporting information
+  - recognize different actor perspectives
+
+forbidden_topics:
+  - medical assessment
+  - foster placement
+  - adoption
+  - david-chen
+  - emma-rodriguez
+  - dr-sofia-martinez
+
+core_discoveries:
+  - Animal Registration Form
+  - Register Animal Intake
+  - Animal Arrived At Shelter
+  - Occupancy Information
+
+optional_discoveries:
+  - Immediate emergency assessment
+  - Microchip scan
+  - Temporary shelter identifier
+  - Finder information
+
+hot_spot_discoveries:
+  - Shelter capacity exhausted
+  - Emergency intake
+  - Microchip ownership reunification path
+
+

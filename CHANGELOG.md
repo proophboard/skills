@@ -6,7 +6,13 @@
 
 #### Skill: Schema v1.0.0
 
-- New skill to add a schema definition to commands,events, and information
+- New skill to add a schema definition to commands, events, and information
+
+#### Skill: Animal Shelter Academy v0.1.0
+
+A training ground for Event Modeling on [prooph board](https://prooph-board.com)
+
+Meet the characters of the [Animal Shelter story](https://www.linkedin.com/posts/alexander-miertsch-prooph-board_businessseriesmodeling-businessseriesmodeling-share-7470224109180907521-ofYG)
 
 ## 2026-04-28
 

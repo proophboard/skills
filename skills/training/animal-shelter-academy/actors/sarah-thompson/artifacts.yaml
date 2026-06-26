@@ -1,0 +1,17 @@
+artifacts:
+
+  intake-checklist:
+    description: >
+      Checklist used during animal intake.
+
+  occupancy-board:
+    description: >
+      Overview of kennel and shelter occupancy.
+
+  adoption-criteria:
+    description: >
+      Criteria used to evaluate adoption readiness.
+
+  placement-guidelines:
+    description: >
+      Guidance used to determine whether foster placement is appropriate.

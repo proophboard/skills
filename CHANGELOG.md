@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-06-26
+
+### New Skills
+
+#### Skill: Schema v1.0.0
+
+- New skill to add a schema definition to commands,events, and information
+
 ## 2026-04-28
 
 ### Updated Skills

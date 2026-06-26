@@ -1,0 +1,11 @@
+{
+  "name": "schema",
+  "version": "1.0.0",
+  "description": "Schema Skill - Add a complete schema to commands, events, or information elements based on example data or event modeling context.",
+  "category": "modeling",
+  "dependencies": ["proophboard-mcp"],
+  "elementTypes": ["command", "event", "information"],
+  "tags": ["modeling", "event-modeling", "best-practices", "schema"],
+  "authors": ["prooph software GmbH"],
+  "license": "MIT"
+}

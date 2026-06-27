@@ -26,6 +26,10 @@ Use this prompt to start the training:
 
 *For best coaching tips alongside the shelter simulation, install available [modeling skills](http://127.0.0.1:3000/tags/modeling.html), too* 
 
+Switch to the **Animal Shelter Academy** workspace on prooph board and model the software while interviewing the characters.
+
+*Tip: You can't find the workspace? Choose "Academy" from the top menu on prooph board.*
+
 ## Maturity Mode
 
 1️⃣ Guided

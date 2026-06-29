@@ -1,6 +1,6 @@
 {
   "name": "animal-shelter-academy",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Animal Shelter Academy - Learn domain discovery and Event Modeling on prooph board by interviewing AI-powered domain experts.",
   "category": "training",
   "dependencies": ["proophboard-mcp"],

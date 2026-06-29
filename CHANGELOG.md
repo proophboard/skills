@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-06-29
+
+### Updated Skills
+
+#### Skill: Animal Shelter Academy v0.2.0
+
+- added a coaching sub skill for Event Modeling
+
+
 ## 2026-06-26
 
 ### New Skills

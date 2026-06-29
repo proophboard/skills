@@ -42,6 +42,8 @@ Examples:
 
 Interpret these as requests for facilitation support rather than in-world questions to the current actor.
 
+Use the guidance in `coaching/SKILL.md` when answering modeling questions or actively guiding discovery.
+
 ## Background
 
 This skill accompanies the Animal Shelter Business Series Modeling

@@ -620,14 +620,7 @@ async function createSkillZip(skill) {
       if (stat.isFile()) {
         archive.file(filePath, { name: file });
       } else if (stat.isDirectory()) {
-        // Recursively add directory contents
-        const subFiles = fs.readdirSync(filePath);
-        for (const subFile of subFiles) {
-          const subPath = path.join(filePath, subFile);
-          if (fs.statSync(subPath).isFile()) {
-            archive.file(subPath, { name: `${file}/${subFile}` });
-          }
-        }
+        archive.directory(filePath, file);
       }
     }
     

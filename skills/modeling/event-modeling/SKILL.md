@@ -55,6 +55,13 @@ Rules:
 - chapters flow in one direction
 - alternative paths use separate chapters
 
+## Alternative Paths vs. Conditional Outcomes
+
+Do not confuse a *divergent journey* with a *conditional outcome of one step*:
+
+- **Alternative path → separate chapter.** The actor makes a different choice that leads to a genuinely different journey (e.g. "Checkout with saved card" vs. "Checkout as guest").
+- **Conditional outcome → sibling slices in the SAME chapter.** A single trigger — a command's decision or an automation's rule — resolves to one of several mutually-exclusive results. Model each result as its own slice in the same chapter and name the slices for the outcome (see Slice Naming). Example: a sync automation whose precedence rule writes *either* System A → System B *or* System B → System A — two Write slices, one chapter, both triggered by the same automation.
+
 ---
 
 # Model Structure
@@ -75,23 +82,23 @@ The **Information Flow lane must not be renamed**.
 
 Slices represent **steps in the process**.
 
-Each slice is one of three types:
+Each slice is one of four types:
 
 ### Read Slice
 
 Contains:
 
-Information → UI
+Information → UI (optional)
 
 Rules:
 
-- information element in Information Flow lane
-- UI element in User Role lane
+- one or more information elements in Information Flow lane (required)
+- UI element in User Role lane (typical, but optional — omit when the information is consumed downstream rather than displayed)
 - commands are NOT allowed
 - events are NOT allowed
 - automation is NOT allowed
 
-A Read Slice represents data being displayed to users.
+A Read Slice represents data read from the system, normally displayed to users on a screen. The **Information** is the required element; the **UI** is its usual companion.
 
 ---
 
@@ -120,7 +127,7 @@ Information (optional) → Automation
 
 Rules:
 
-- optional information element in Information Flow lane
+- information in the Information Flow lane is optional (zero or more elements allowed)
 - automation element in User Role lane
 - commands are NOT allowed
 - events are NOT allowed
@@ -368,6 +375,7 @@ Valid flows:
 - WRITE → AUTOMATION
 - AUTOMATION → WRITE
 - AUTOMATION → READ
+- WRITE → EVENT REACTION (an event triggers an automation in an Event Reaction slice)
 
 Every command must be traceable to:
 
@@ -552,6 +560,36 @@ Stop when something is unclear during modeling:
 - Authorization
 
 If you assume → ask user question or create a Hotspot.
+
+---
+
+# Validation Checklist
+
+In Critic Mode — and as step 8 of the Modeling Order — verify every item before declaring a model correct:
+
+- [ ] Lanes renamed: User Role → the actual actor, System Context → the system/bounded context; **Information Flow is never renamed**
+- [ ] Each slice is exactly one type (Read, Write, Automation, or Event Reaction) — no mixed element sets
+- [ ] Element placement: commands and information in Information Flow; events in System Context; UI and automation in User Role
+- [ ] The process starts with a READ or AUTOMATION slice
+- [ ] Every command traces to a trigger (a preceding READ or AUTOMATION) and produces at least one event
+- [ ] No events inside Automation slices — put the event in a following Write slice, or use an Event Reaction slice
+- [ ] Commands are imperative business intent; events are past-tense business facts
+- [ ] No data-loading commands, UI-interaction events, or technical events (see Anti-Patterns)
+- [ ] Slice transitions match a Valid flow (see Flow & Causality)
+- [ ] Assumptions are surfaced as Hotspots or questions, not buried in descriptions
+
+---
+
+# Reading Full Element Details
+
+`get_chapter` returns short element details inline, but collapses large slice or element details to
+a content-reference stub (e.g. `<<ccr:...,string,5.2KB>>`) rather than the full markdown. A stub is
+not the content — never reason about a slice from a stub, and never treat a stub as "no details".
+Fetch the complete text for that element from the live board before using it.
+
+The live board is always the source of truth. If your setup keeps a local export or snapshot of the
+board, treat it strictly as an offline fallback: it lags the live board, so refresh it at the moment
+you need it rather than trusting a committed copy.
 
 ---
 

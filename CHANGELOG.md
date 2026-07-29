@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-07-28
+
+### Updated Skills
+
+#### Skill: Event Modeling v1.5.0
+
+- clarified that a conditional outcome of one trigger is sibling slices in the same chapter, while
+  a genuinely divergent journey is a separate chapter
+- documented the four slice types explicitly, including Event Reaction and the `add_event_reaction`
+  tool
+- added a Validation Checklist for Critic mode and as the final step of the modeling order
+
+
 ## 2026-06-29
 
 ### Updated Skills

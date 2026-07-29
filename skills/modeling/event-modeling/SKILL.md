@@ -295,6 +295,25 @@ Hot Spots should contain questions and explanations.
 
 DO NOT WRITE INTO HOT SPOT DETAILS! Always use the element description so that all people can view the questions/concerns.
 
+### Two kinds of Hot Spot
+
+The same red element is used for two different things, and conflating them makes a board hard to
+read. Both are legitimate; be deliberate about which you are creating.
+
+| | **Open question** | **Failure / skip state** |
+|---|---|---|
+| Means | We have not decided this yet | We decided: this is what happens when it goes wrong |
+| Written by | Modeling and Critic mode | `slice-scenarios`, as the **Then** of a failure or rejection scenario |
+| Content | A question, the options, and what blocks on it | A named outcome with its payload — `reason`, ids, outcome code |
+| Lifecycle | Resolved and closed; the description is rewritten to record the ruling | Permanent — it is part of the specified behavior |
+| Blocks the gate? | Yes, until resolved | No — its existence is what *passing* looks like |
+
+A failure-state Hot Spot is not an unresolved question and must not be counted as one when
+reporting completeness. Conversely, an open question dressed up with a payload looks decided when
+it is not. When you resolve an open question, rewrite its description to state the ruling and the
+rejected alternatives — do not delete it. The history is the point, and the next person to have
+the same idea needs to find out why it was rejected.
+
 ---
 
 # Anti-Patterns (DO NOT MODEL)
@@ -590,6 +609,47 @@ Fetch the complete text for that element from the live board before using it.
 The live board is always the source of truth. If your setup keeps a local export or snapshot of the
 board, treat it strictly as an offline fallback: it lags the live board, so refresh it at the moment
 you need it rather than trusting a committed copy.
+
+---
+
+# Amending a Chapter That Already Shipped
+
+Most of these rules assume you are modeling something new. A large share of real work is not that:
+it is changing a chapter whose slices are marked `deployed`, usually because production taught you
+something the model did not know. Amendment has its own failure modes.
+
+**A shipped chapter is not a finished chapter.** A `deployed` status records that code matching the
+slice was merged, not that the slice is still correct. When a decision changes what a deployed
+slice contracts, the status is now wrong too — say so explicitly rather than leaving a slice that
+reads as done while its behavior is being rewritten.
+
+**Expect the board to disagree with itself.** Amendments tend to land where they are cheapest to
+write — a comment on an element, or the element's details — while the slice's own Given/When/Then
+text, written months earlier, still states the superseded rule. Both are live board content and
+neither is obviously stale. Before amending, read *all three* levels for the slice you are touching
+— slice details, element details, element comments — and treat any disagreement between them as a
+finding to resolve, not a discrepancy to route around. The most recent writing is not automatically
+the authority; the most recent *decision* is.
+
+**Never blind-write a details field.** `update_slice_details` and `update_element_details` replace
+the whole field. On a shipped chapter that field holds accumulated GWT and implementation notes
+that no one has a second copy of. Read it in full first; if you could not read it, leave a comment
+instead — comments are additive.
+
+**Amend by appending with a dated banner, not by rewriting in place.** Leave the superseded text
+where it is and mark what supersedes it. Someone will later ask why the contract changed, and the
+answer is only useful next to the thing it changed. The same reasoning as superseding an ADR rather
+than editing it.
+
+**Re-check the guardrails, not only the rules.** A constraint agreed earlier — especially one a
+customer signed — may have become unsatisfiable rather than merely inconvenient, because the
+amendment revealed something about the external system's data model. That is not a rule to quietly
+drop; it is a decision to surface, restate in terms that *are* satisfiable, and record with its
+consequence.
+
+**Check the downstream artifacts the chapter owns.** A manifest marked `completed`, a spec doc, an
+ADR whose decision you just superseded. An amendment that updates only the board leaves those
+asserting something that is no longer true, and they are what the next Build session reads first.
 
 ---
 

@@ -219,6 +219,12 @@ Events must:
 - use past tense
 - be understandable by business stakeholders
 
+Naming:
+
+- past tense
+- title case
+- business language
+
 Examples:
 
 User Registered
@@ -239,11 +245,27 @@ Color: Green (#73dd8e)
 
 Represents **data read from the system**.
 
+Naming:
+
+- noun phrase
+- title case
+- business language
+
+Name the data, not the machinery that produces it. `Order Summary`, never
+`OrderSummaryProjector` — a class suffix on the board is an implementation
+detail leaking into the model.
+
 Examples:
 
 User Profile
 Order Summary
 Invoice List
+
+Invalid:
+
+OrderSummaryProjector
+UserProfileReadModel
+InvoiceListRepository
 
 Queries produce **information**, not events.
 
@@ -254,6 +276,15 @@ Queries produce **information**, not events.
 Color: Light Gray
 
 Represents **screens or views**.
+
+Naming:
+
+- title case
+- display name, as a user would refer to the screen
+
+Words describing what the user is looking at — `Page`, `Screen`, `Grid`,
+`Panel`, `Form` — belong here. They are what a stakeholder would say, unlike a
+class suffix such as `Projector`.
 
 Examples:
 

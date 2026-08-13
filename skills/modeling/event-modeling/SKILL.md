@@ -383,19 +383,6 @@ Events must represent **business facts**.
 
 ---
 
-# Think Before Modeling
-
-Before adding elements ask:
-
-1. What business event happens?
-2. What command causes it?
-3. What information becomes available?
-4. What UI or automation interacts next?
-
-If the event is unclear, do not model the step yet.
-
----
-
 # Lane Naming
 
 Default lane names MUST be replaced with domain-specific names.
@@ -635,7 +622,13 @@ In Critic Mode — and as step 8 of the Modeling Order — verify every item bef
 `get_chapter` returns short element details inline, but collapses large slice or element details to
 a content-reference stub (e.g. `<<ccr:...,string,5.2KB>>`) rather than the full markdown. A stub is
 not the content — never reason about a slice from a stub, and never treat a stub as "no details".
-Fetch the complete text for that element from the live board before using it.
+Fetch the complete text with `get_element(workspace_id, chapter_id, element_id)` before using it.
+
+`get_chapter` has no metadata-only mode: on a mature chapter it returns every slice's full
+Given/When/Then and can run to tens of thousands of tokens. Its `slice_ids` filter narrows
+*elements* only — lanes and slices always come back whole, and an id that matches nothing does not
+suppress them. To learn a chapter's structure, prefer `search_elements` or a single `get_chapter`
+whose cost you have accepted; do not call it speculatively hoping to get a cheap summary.
 
 The live board is always the source of truth. If your setup keeps a local export or snapshot of the
 board, treat it strictly as an offline fallback: it lags the live board, so refresh it at the moment
@@ -662,8 +655,10 @@ neither is obviously stale. Before amending, read *all three* levels for the sli
 finding to resolve, not a discrepancy to route around. The most recent writing is not automatically
 the authority; the most recent *decision* is.
 
-**Never blind-write a details field.** `update_slice_details` and `update_element_details` replace
-the whole field. On a shipped chapter that field holds accumulated GWT and implementation notes
+**Never blind-write a details field.** `update_slice(details:)` and `update_element(details:)` replace
+the whole field. To add without reading, use the append variants — `append_details`,
+`append_description`, or `update_element(description_append:)` — which are atomic server-side.
+On a shipped chapter that field holds accumulated GWT and implementation notes
 that no one has a second copy of. Read it in full first; if you could not read it, leave a comment
 instead — comments are additive.
 

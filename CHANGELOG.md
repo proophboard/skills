@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-08-18
+
+### Updated Skills
+
+#### Skill: Event Modeling v1.6.0
+
+**Hot Spot semantics.** This skill defines Hot Spots as open questions, while `slice-scenarios` uses them as runtime failure states in a scenario's Then. Both are legitimate and the element is the same red sticky, but conflating them makes a failure-state Hot Spot look like an unresolved question and vice versa. Adds a table separating them by meaning, author, content, lifecycle, and whether they block a completeness gate.
+
+**Amending shipped chapters.** Every existing rule assumes greenfield modeling. Adds a section for the case where production taught you something the model didn't know:
+- a deployed status is not evidence the slice is still correct
+- the board routinely disagrees with itself across slice details / element details / comments
+- details fields must never be blind-written, because they replace wholesale
+- the chapter's downstream artifacts (manifest, spec, superseded ADR) go stale silently
+
+**`get_element` now exists.** The stub-resolution paragraph says "fetch the complete text for that element from the live board", which was the only option when it was written. Naming the tool makes it actionable.
+
+**`get_chapter` has no metadata-only mode**, and its `slice_ids` filter narrows *elements* only — lanes and slices always come back whole, and an id matching nothing does not suppress them. I read the existing text as implying a cheap structural read was available, called it speculatively on a mature chapter, and got ~30k tokens of Given/When/Then back. Worth stating so the next agent budgets for it.
+
 ## 2026-07-28
 
 ### Updated Skills

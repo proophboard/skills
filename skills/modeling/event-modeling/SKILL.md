@@ -86,19 +86,27 @@ Each slice is one of four types:
 
 ### Read Slice
 
+Also called a **State View slice**.
+
 Contains:
 
 Information → UI (optional)
+
+The read model is projected from **previously recorded events** — those events are its inputs, and
+placing them in the slice is how the model shows what it projects from.
 
 Rules:
 
 - one or more information elements in Information Flow lane (required)
 - UI element in User Role lane (typical, but optional — omit when the information is consumed downstream rather than displayed)
+- the source events the read model projects from **may** be placed in the slice's System Context lane
 - commands are NOT allowed
-- events are NOT allowed
+- **new** events are NOT allowed — a Read slice consumes events that already exist and never records a state change
 - automation is NOT allowed
 
 A Read Slice represents data read from the system, normally displayed to users on a screen. The **Information** is the required element; the **UI** is its usual companion.
+
+**Source events are inputs, not outputs.** The test is not "no event stickies" but *no state change*: a Read slice never emits an event. Showing the source events beside the read model documents the dependency; it is not a claim about wiring. On prooph board the arrow is derived from **slice order** — an event in a slice *before* the read reaches the Information in the following read slice, while an event placed in the *same* slice as its Information draws no arrow. Both placements are legal; only one draws.
 
 ---
 
@@ -110,7 +118,9 @@ UI (optional) -> Command → Event
 
 Rules:
 
-- exactly one command in Information Flow lane
+- exactly one command in Information Flow lane — the board tools enforce this **per cell**, so a
+  `move_element` into a cell that already holds a command is rejected, and **swapping two slices'
+  contents needs a temporary holding slice** rather than two moves
 - one or more events in System Context lane
 - information is NOT allowed
 - automation is NOT allowed
@@ -170,10 +180,44 @@ Example: `Order Placed` (event) → `Fraud Detection Service` (automation)
 
 ## Structure
 
-Each element has a name.
-Also write a short description of 2-3 sentences or bullet points.
+Each element has a name — pass a bare `&`, not an entity: the tools escape names, so `&amp;` lands
+on the card literally.
 
-DO NOT WRITE TO ELEMENT DETAILS. Details are reserved for deep modeling. This skill is about exploration.
+Also write a short description of 2-3 sentences or bullet points. **Do not write to element
+`details` while exploring.** They are the long-form specification — where a storage or transport
+concern belongs instead of a command or an event — and where an amendment appends. Both cases are
+below in Description vs. Details and Amending a Chapter That Already Shipped.
+
+## Description vs. Details
+
+An element documents itself in two places, and they are not interchangeable.
+
+**The description is the card.** It describes the information flow in condensed form — what this
+step does, in the business's own words — and it is what people read while walking the model. Keep
+it short; this is where concrete examples and sample data earn their place. Markdown is supported
+(lists, links, images, code fences, Mermaid diagrams).
+
+**The details are the sidebar** (`Ctrl+D`, the *Documentation* tab). This is the long-form
+specification: database schema, configuration, API endpoints, rules — whatever the element needs
+and a card cannot hold. It has an auto-generated table of contents (built from `#`/`##`/`###`
+headings), the same extended Markdown as the description, and element references (`:::element`)
+that link to the element they name.
+
+They differ in scope, not only in length:
+
+| | Description | Details |
+|---|---|---|
+| Scope | The slice this placement sits in | The element, at every placement |
+| Shared | No — per placement | Yes — all similar elements (name + type + context) share one |
+| Written for | This step: concrete examples | The element: what is true everywhere |
+
+One consequence follows: a similar element in another slice may carry a **different description** —
+that is where a step-specific example belongs. Put it in `details` instead and it shows at every
+placement.
+
+Rewriting a description is therefore cheap and rewriting `details` is not (see Amending a Chapter
+That Already Shipped): a correction moves *out* of the description and *into* `details`, never the
+other way, and never into a second description-shaped field.
 
 ## Command
 
@@ -336,14 +380,18 @@ read. Both are legitimate; be deliberate about which you are creating.
 | Means | We have not decided this yet | We decided: this is what happens when it goes wrong |
 | Written by | Modeling and Critic mode | `slice-scenarios`, as the **Then** of a failure or rejection scenario |
 | Content | A question, the options, and what blocks on it | A named outcome with its payload — `reason`, ids, outcome code |
-| Lifecycle | Resolved and closed; the description is rewritten to record the ruling | Permanent — it is part of the specified behavior |
+| Lifecycle | Resolved, then **retired** — the ruling moves into the slice's details | Permanent — it is part of the specified behavior |
 | Blocks the gate? | Yes, until resolved | No — its existence is what *passing* looks like |
 
 A failure-state Hot Spot is not an unresolved question and must not be counted as one when
 reporting completeness. Conversely, an open question dressed up with a payload looks decided when
-it is not. When you resolve an open question, rewrite its description to state the ruling and the
-rejected alternatives — do not delete it. The history is the point, and the next person to have
-the same idea needs to find out why it was rejected.
+it is not.
+
+**Resolving an open question retires the element.** A red card on a finished model reads as "still
+broken", which is not what a ruling looks like. Move the ruling and its rejected alternatives into
+the owning slice's `details.md` as a dated section (`### Ruled decisions`) and remove the element;
+a behavioural ruling also earns a Given/When/Then, which that section cannot replace. Only where
+the history lives changes. A failure/skip state is never retired this way.
 
 ## Reusing Elements Across Chapters (Sync)
 
@@ -632,7 +680,7 @@ If you assume → ask user question or create a Hotspot.
 In Critic Mode — and as step 8 of the Modeling Order — verify every item before declaring a model correct:
 
 - [ ] Lanes renamed: User Role → the actual actor, System Context → the system/bounded context; **Information Flow is never renamed**
-- [ ] Each slice is exactly one type (Read, Write, Automation, or Event Reaction) — no mixed element sets
+- [ ] Each slice is exactly one type (Read, Write, Automation, or Event Reaction). The one permitted overlap is a Read slice carrying the source events its read model projects from — and even then it contains no command and emits no new event
 - [ ] Element placement: commands and information in Information Flow; events in System Context; UI and automation in User Role
 - [ ] The process starts with a READ or AUTOMATION slice
 - [ ] Every command traces to a trigger (a preceding READ or AUTOMATION) and produces at least one event
@@ -660,22 +708,26 @@ before writing anything back — never compose board writes from the inline rend
 A full `get_chapter` is expensive: on a mature chapter it returns every slice's full
 Given/When/Then and can run to tens of thousands of tokens. Three cheap reads avoid that:
 
-- `get_chapter(structure_only: true)` strips lane and slice details, leaving the structure (lanes,
-  slices, element placements, ids, names). Use it whenever you need the shape of a chapter rather
-  than its prose.
-- `slice_ids` narrows the *details* to the slices you name: non-matching slices still come back
-  (lanes and slices are always whole, and an id that matches nothing does not suppress them) but
-  without their `details`, so a single-slice query on a large chapter stays small.
+- `get_chapter(structure_only: true)` strips **lane and slice details only** — every element's
+  `description` and `details` still come back, so on a chapter with a dozen elements it is not the
+  cheap "just the shape" read its name implies (55 KB for an eight-slice chapter, measured). For a
+  placement inventory, read the host project's local model files — its config declares whether that
+  mirror is live — or use `search_elements(detail: 'none')`.
+- `list_changelog_events(detail: 'none')` answers who-changed-what-when in a few hundred bytes;
+  `'summary'` over 40 events cost 33 KB in the same session, and `'full'` also drags old and new
+  values.
+- `slice_ids` narrows the *details* to the slices you name, so a single-slice query stays small —
+  non-matching slices still come back (lanes and slices are always whole, and an id that matches
+  nothing does not suppress them), just without their `details`.
 - `search_elements(detail:)` is the element-level equivalent — `'none'` (id, type, name, laneId,
   sliceId, chapterId), `'summary'` (adds context, index, chapterName), or `'full'` (the default,
   including description and details). Use `'none'` or `'summary'` for inventory and reference
   checks.
 
-Do not call a full `get_chapter` speculatively hoping for a cheap summary.
-
-The live board is always the source of truth. If your setup keeps a local export or snapshot of the
-board, treat it strictly as an offline fallback: it lags the live board, so refresh it at the moment
-you need it rather than trusting a committed copy.
+The live board is always the source of truth. Some setups also keep a local mirror of it; the host
+project's Event modeling config declares whether that mirror is live (streamed from the board) or a
+stale export, and that declaration decides how far to trust it. A live mirror is the cheapest read by
+an order of magnitude — read it before making any MCP read.
 
 ---
 

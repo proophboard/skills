@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-04
+
+### Updated Skills
+
+#### Skill: Event Modeling v1.8.0
+
+**Description vs. Details — what goes where, and why the sidebar is not a longer card.** The skill said only "write a short description" and "DO NOT WRITE TO ELEMENT DETAILS. Details are reserved for deep modeling", which states the restriction without ever stating the split. A reader told that details are off-limits in this skill never learns what they are *for*, and a reader who does write them has no rule for choosing between the two fields. Adds a section covering the description as the condensed card text — the information flow in business language, with examples and sample data welcome — and the details as the element's long-form specification: schema, configuration, API endpoints, rules. It names the sidebar's auto-generated table of contents, its extended Markdown, and `:::element` references. Adds the scope table — description local to the placement, details shared by every similar element (name + type + context) — and the two consequences that follow from it: a step-specific example belongs in the description, and `details` is shared state that must be read before it is written. The Structure rule gains a pointer, so "details are reserved" and "this is what details are for" no longer read as a contradiction.
+
 ## 2026-09-23
 
 ### Updated Skills

@@ -746,6 +746,91 @@ an order of magnitude — read it before making any MCP read.
 
 ---
 
+# Documentation Templates (Element Details)
+
+When you ARE asked to write or update element details (deep documentation, outside pure
+exploration), an element may have a **documentation template** applied. If it
+does, the API enforces the template's structure on every details write.
+
+## How to tell a template is applied
+
+Read the element first (`get_element`). If its `details` begin with a binding
+marker comment:
+
+```
+<!-- pb:template <template-id> -->
+```
+
+then a template is in force. The marker is managed by the server — it is
+invisible in the rendered UI and you do **not** need to send it back.
+
+## Placeholder syntax
+
+Templates are markdown made of two kinds of content:
+
+- **Fixed text** (headings and other literal lines) — must be kept **verbatim
+  and in order** in your submission.
+- **Placeholders**, written `%% instruction %%` — short instructions telling you
+  what to write. You MUST replace every placeholder with real content. No
+  `%% ... %%` marker may remain.
+
+Optional sections are wrapped in `%%optional%% ... %%endoptional%%` (an optional
+label/hint may follow `optional`, e.g. `%%optional: when main page%%`). An
+optional section is **all-or-nothing**: include it in full (its fixed text
+intact) or omit it entirely. The condition after `optional:` is a hint for you —
+it is NOT auto-evaluated; you decide whether the section applies.
+
+Example template content:
+
+```
+## API
+
+%% One-sentence summary of what this command does %%
+
+### Route
+
+%% HTTP method %% /%% path, e.g. animals/:animalId %%
+
+%%optional: only for POST/PUT/PATCH%%
+### Body
+
+````json
+%% request body JSON schema %%
+````
+%%endoptional%%
+
+## Database Updates
+
+%% Which tables/rows change, or "None" %%
+```
+
+## Writing details for a templated element
+
+1. Read the element (`get_element`). If the details still contain `%% ... %%`
+   placeholders, that is the unfilled template to complete.
+2. Fill **every** placeholder. Keep all headings and fixed lines exactly as
+   written, in the same order. You may add extra content between sections.
+3. Submit the full filled document via `update_element_details` (or
+   `update_element` with `details`). Do NOT include the binding comment — the
+   server re-attaches it automatically.
+4. `append_details` is **rejected** on a templated element — always send the
+   complete document.
+
+### Recovering from a validation error
+
+If a details write is rejected with a template-validation error, the message
+names the `template_id`. Then:
+
+1. Call `get_template` with that id to read the current template `content`
+   (with all placeholders and fixed text).
+2. Re-fill every placeholder, keep all fixed text verbatim, add any missing
+   sections, and resubmit.
+
+Use `list_templates` to discover which templates exist for an element type.
+
+---
+
+
 # Amending a Chapter That Already Shipped
 
 Most of these rules assume you are modeling something new. A large share of real work is not that:

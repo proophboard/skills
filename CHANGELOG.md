@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-08
+
+### Updated Skills
+
+#### Skill: Event Modeling v1.9.0
+
+**Dealing with Documentation Templates.**
+
+See the docs for details about [Dealing with Documentation Templates](https://flow.prooph-board.com/docs/markdown-content#markdown-templates).
+
 ## 2026-10-04
 
 ### Updated Skills

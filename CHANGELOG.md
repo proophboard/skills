@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-11-25
+
+### New Skills
+
+#### Skill: html-wireframe v1.0.0
+
+- New skill for creating focused, realistic HTML wireframes for prooph board UI elements
+- Supports static preview, Exploration Mode runtime data via `{{ state.Context.Element }}` expressions
+- Enables user input capture via `window.storage.save({...})` for interactive prototyping
+- Documents shared HTML snippets for reusable CSS, JavaScript, and components
+- Teaches safe integration with Exploration Mode: graceful fallbacks, defensive JSON parsing, guarded `window.storage` calls
+- Author: prooph software GmbH
+
 ## 2026-11-08
 
 ### Updated Skills

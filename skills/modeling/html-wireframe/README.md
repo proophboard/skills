@@ -223,7 +223,7 @@ Then import into a wireframe:
 
 ## Example
 
-![HTML Wireframe in Exploration Mode](_assets/html_wireframe_in_exploartion_mode.png)
+![HTML Wireframe in Exploration Mode](_assets/html_wireframe_in_exploration_mode.png)
 
 ## Final Check
 

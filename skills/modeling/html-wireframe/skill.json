@@ -1,6 +1,6 @@
 {
   "name": "html-wireframe",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "HTML Wireframes Skill - Create focused, realistic HTML wireframes for prooph board UI elements, including reusable HTML snippets and safe integration with Exploration Mode runtime data and user input.",
   "category": "modeling",
   "dependencies": ["proophboard-mcp"],

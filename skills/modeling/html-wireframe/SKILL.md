@@ -81,6 +81,11 @@ component framework.
     control should work or be clearly disabled with a reason.
 -   Keep behavior limited to presentation and collecting user input for
     the modeled process.
+-   Do not put CSS or JavaScript in separate code blocks. Embed style and script
+    tags in the html.
+-   Add a wireframe html code block always to the description of the UI element.
+-   Do not use CSS settings like `m̀ax-width` smaller than 1024px for content containers.
+    HTML is rendered into a virtual screen of 1024x768 pixels, then scaled to fit the viewport.
 
 ## Runtime data expressions
 

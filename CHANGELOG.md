@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-11-27
+
+### Updated Skills
+
+#### html-wireframe v1.0.1
+
+- Added wireframe html code block to UI element descriptions
+- Added CSS and JavaScript embedding to html code blocks
+- Added CSS max-width setting guidance
+
 ## 2026-11-25
 
 ### New Skills
